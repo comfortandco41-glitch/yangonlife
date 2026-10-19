@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/npcs/npc_pedestrian.gd" id="1_npc"]
 [ext_resource type="Script" path="res://scripts/interaction/interactable_zone.gd" id="2_interactable"]
+[ext_resource type="Texture2D" path="res://assets/new/SuperRetroWorld_CharacterPack_Full/SuperRetroWorld_CharacterPack_Full/sprite_split/character_2/character_2_frame32x32.png" id="3_charsprite"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_npc"]
 radius = 0.35
@@ -23,6 +24,16 @@ roughness = 0.7
 [sub_resource type="SphereShape3D" id="SphereShape3D_talk"]
 radius = 2.0
 
+[sub_resource type="CylinderMesh" id="CylinderMesh_shadow_npc"]
+top_radius = 0.4
+bottom_radius = 0.4
+height = 0.02
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_shadow_npc"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(0, 0, 0, 0.4)
+
 [node name="NPCPedestrian" type="CharacterBody3D" groups=["npcs", "pedestrians"]]
 collision_layer = 2
 collision_mask = 5
@@ -34,11 +45,28 @@ shape = SubResource("CapsuleShape3D_npc")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+visible = false
 mesh = SubResource("CapsuleMesh_npc")
 
 [node name="Shirt" type="MeshInstance3D" parent="MeshInstance3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35, 0)
 material_override = SubResource("StandardMaterial3D_shirt")
+
+[node name="CharacterSprite" type="Sprite3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.88, 0)
+billboard = 2
+alpha_cut = 1
+texture_filter = 0
+texture = ExtResource("3_charsprite")
+hframes = 3
+vframes = 4
+frame = 1
+pixel_size = 0.055
+
+[node name="ShadowBlob" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, 0)
+mesh = SubResource("CylinderMesh_shadow_npc")
+surface_material_override/0 = SubResource("StandardMaterial3D_shadow_npc")
 
 [node name="TalkArea" type="Area3D" parent="."]
 collision_layer = 8

@@ -18,10 +18,10 @@
 [ext_resource type="PackedScene" path="res://assets/new/kenney_cityKitSuburban/Models/GLTF format/house_type15.glb" id="16_house15"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_sky"]
-sky_top_color = Color(0.385, 0.455, 0.55, 1)
-sky_horizon_color = Color(0.646, 0.656, 0.67, 1)
-ground_bottom_color = Color(0.2, 0.17, 0.13, 1)
-ground_horizon_color = Color(0.646, 0.656, 0.67, 1)
+sky_top_color = Color(0.24, 0.52, 0.86, 1)
+sky_horizon_color = Color(0.74, 0.82, 0.90, 1)
+ground_bottom_color = Color(0.22, 0.20, 0.18, 1)
+ground_horizon_color = Color(0.55, 0.58, 0.62, 1)
 
 [sub_resource type="Sky" id="Sky_downtown"]
 sky_material = SubResource("ProceduralSkyMaterial_sky")
@@ -30,12 +30,12 @@ sky_material = SubResource("ProceduralSkyMaterial_sky")
 background_mode = 2
 sky = SubResource("Sky_downtown")
 ambient_light_source = 3
-ambient_light_color = Color(0.65, 0.65, 0.65, 1)
+ambient_light_color = Color(0.75, 0.75, 0.75, 1)
 tonemap_mode = 2
 
 [sub_resource type="StandardMaterial3D" id="Mat_Ground"]
-albedo_color = Color(0.533333, 0.533333, 0.533333, 1)
-roughness = 0.9
+albedo_color = Color(0.46, 0.45, 0.42, 1)
+roughness = 0.85
 
 [sub_resource type="BoxMesh" id="BoxMesh_ground"]
 material = SubResource("Mat_Ground")
@@ -45,8 +45,8 @@ size = Vector3(240, 1, 240)
 size = Vector3(240, 1, 240)
 
 [sub_resource type="StandardMaterial3D" id="Mat_Road"]
-albedo_color = Color(0.2, 0.2, 0.2, 1)
-roughness = 0.85
+albedo_color = Color(0.16, 0.17, 0.19, 1)
+roughness = 0.8
 
 [sub_resource type="BoxMesh" id="BoxMesh_road_ns"]
 material = SubResource("Mat_Road")

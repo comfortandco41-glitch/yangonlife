@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.7.2] - 2026-10-19 — Isometric Style Pivot, Character Selection & Animated 2D Citizens
+
+### Added
+- **Isometric Perspective Pivot:**
+  - Transitioned from close low-angle third-person camera to elevated tactical isometric view (Pitch: -45°, Yaw: 45°, FOV: 50°, default distance 16.0m).
+  - Unlocked mouse cursor (`Input.MOUSE_MODE_VISIBLE`) for effortless UI navigation, dialogue clicking, and item management.
+  - Added smooth mouse wheel zoom (clamped between 8m and 26m) and camera yaw rotation via `Q` and `R` keys (45° increments) as well as smooth right-mouse-button orbit drag.
+  - Screen-relative isometric locomotion: pressing `W` moves character towards screen up/forward, `S` down/backward, `A` left, and `D` right.
+- **Character Selection System (`scripts/systems/character_data.gd` & `scenes/ui/start_screen.tscn`):**
+  - Interactive character creator on start screen featuring all 32 SuperRetroWorld 16-bit retro citizens with 7 pre-configured Burmese archetypes (Ko Thet - Novice Citizen, Ko Zaw - Taxi Driver, Ma Thida - Tea Shop Host, Ashin Teza - Buddhist Monk, Daw Lay - Street Food Vendor, Ko Phyo - Tech Delivery Courier, U Ba - City Merchant).
+  - Live 72x72 face portrait preview, previous/next character navigation buttons (`◀`, `▶`), citizen name input, and archetype selector.
+  - Persists selected citizen sprite index, custom name, and archetype through save/load files (`user://yangon_life_save.json`).
+- **Animated 2D Citizens in 3D Urban Space:**
+  - `Sprite3D` billboard citizen rig (`scenes/player/player.tscn`) with 4-direction directional walk cycle (South, West, East, North) animated at 7.5–10 FPS based on movement velocity.
+  - Subtle circular ground drop-shadow (`ShadowBlob`) grounding characters onto downtown sidewalks and asphalt.
+  - Converted ambient NPC pedestrians (`scenes/npcs/npc_pedestrian.tscn`) to matching 2D billboard sprites with archetype-specific sprite mapping (Monks, Vendors, Workers, Students) and synchronized waypoint walk animations.
+- **Vibrant Environment & UI Polish:**
+  - Balanced world lighting with tropical blue skybox (`Color(0.24, 0.52, 0.86)`), warm stone pedestrian sidewalks (`Color(0.46, 0.45, 0.42)`), and high-contrast dark asphalt roadways (`Color(0.16, 0.17, 0.19)`).
+  - Replaced squished HUD portrait with clean 32x32 `AtlasTexture` region cropping front face frame.
+
 ## [0.7.1] - 2026-10-19 — Hotfix: Player Spawn Collision & 3D Asset Integration
 
 ### Fixed

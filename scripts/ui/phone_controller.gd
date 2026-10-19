@@ -1,5 +1,8 @@
 class_name PhoneController
 extends Control
+
+const CharacterData = preload("res://scripts/systems/character_data.gd")
+
 ## PhoneController — Smartphone personal organizer for Yangon Life.
 ##
 ## Simulates a Burmese Android smartphone interface (KBZPay/WavePay, Jobs, GPS Map, Status).
@@ -95,6 +98,16 @@ func _ready() -> void:
 	# Connect simulation manager signals
 	_connect_manager_signals()
 	_setup_app_buttons()
+
+	# Setup initial citizen portraits using cropped 32x32 atlas
+	var portrait: AtlasTexture = CharacterData.get_character_portrait(1)
+	if portrait:
+		var home_av := find_child("AvatarIcon", true, false) as TextureRect
+		if home_av:
+			home_av.texture = portrait
+		var status_av := get_node_or_null("%StatusProfile/HBox/AvatarIcon") as TextureRect
+		if status_av:
+			status_av.texture = portrait
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("phone"):

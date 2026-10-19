@@ -1,6 +1,8 @@
 extends CanvasLayer
 ## HUD Controller — displays money, time, needs, and interaction prompts
 
+const CharacterData = preload("res://scripts/systems/character_data.gd")
+
 @onready var day_label: Label = %DayLabel if has_node("%DayLabel") else find_child("DayLabel", true, false)
 @onready var time_label: Label = %TimeLabel if has_node("%TimeLabel") else find_child("TimeLabel", true, false)
 @onready var money_label: Label = %MoneyLabel if has_node("%MoneyLabel") else find_child("MoneyLabel", true, false)
@@ -56,6 +58,21 @@ func _ready() -> void:
 	if interaction_prompt:
 		interaction_prompt.text = ""
 		interaction_prompt.visible = false
+
+	# Setup initial citizen portrait
+	var avatar_rect := get_node_or_null("MarginContainer/TopSection/AvatarCard/PlayerAvatar") as TextureRect
+	if avatar_rect:
+		var portrait: AtlasTexture = CharacterData.get_character_portrait(1)
+		if portrait:
+			avatar_rect.texture = portrait
+
+## Updates the player portrait icon with a cropped 32x32 face
+func set_player_avatar(character_index: int) -> void:
+	var avatar_rect := get_node_or_null("MarginContainer/TopSection/AvatarCard/PlayerAvatar") as TextureRect
+	if avatar_rect:
+		var portrait: AtlasTexture = CharacterData.get_character_portrait(character_index)
+		if portrait:
+			avatar_rect.texture = portrait
 
 func _on_money_changed(new_balance: int) -> void:
 	update_money(new_balance)

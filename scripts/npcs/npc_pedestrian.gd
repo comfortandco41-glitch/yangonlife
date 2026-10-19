@@ -1,5 +1,8 @@
 class_name NPCPedestrian
 extends CharacterBody3D
+
+const CharacterData = preload("res://scripts/systems/character_data.gd")
+
 ## Schedule-driven pedestrian NPC with distance-based LOD for Yangon Life.
 ##
 ## Implements three-tier LOD (Full, Simplified, Offscreen),
@@ -53,6 +56,35 @@ func _ready() -> void:
 	# Set default LOD
 	_set_lod(LOD_FULL)
 
+	# Configure archetype pixel-art sprite
+	_setup_archetype_sprite()
+
+var _anim_timer: float = 0.0
+var _facing_row: int = 0
+
+func _setup_archetype_sprite() -> void:
+	var sprite := get_node_or_null("CharacterSprite") as Sprite3D
+	if not sprite:
+		return
+	var char_idx: int = 2
+	match archetype:
+		"monk":
+			char_idx = 26
+		"office_worker":
+			char_idx = 2
+		"street_vendor":
+			char_idx = 8
+		"student":
+			char_idx = 14
+		"shopper":
+			char_idx = 5
+		_:
+			char_idx = 6
+	var path: String = CharacterData.get_sprite_sheet_path(char_idx)
+	var tex: Texture2D = load(path) as Texture2D
+	if tex:
+		sprite.texture = tex
+
 func _process(delta: float) -> void:
 	# Interaction cooldown timer
 	if is_interacting:
@@ -105,6 +137,18 @@ func _physics_process(delta: float) -> void:
 			var target_rot_y: float = atan2(-move_dir.x, -move_dir.z)
 			rotation.y = lerp_angle(rotation.y, target_rot_y, minf(10.0 * delta, 1.0))
 			move_and_slide()
+
+			# Animate pixel-art sprite walk cycle
+			var sprite := get_node_or_null("CharacterSprite") as Sprite3D
+			if sprite:
+				if absf(move_dir.z) >= absf(move_dir.x):
+					_facing_row = 0 if move_dir.z > 0.0 else 3
+				else:
+					_facing_row = 2 if move_dir.x > 0.0 else 1
+				_anim_timer += delta * 6.5
+				var walk_step: int = int(_anim_timer) % 4
+				var frame_offset: int = 1 if (walk_step == 1 or walk_step == 3) else (0 if walk_step == 0 else 2)
+				sprite.frame = _facing_row * 3 + frame_offset
 
 		LOD_SIMPLIFIED:
 			var step: Vector3 = move_dir * walk_speed * delta

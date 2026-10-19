@@ -56,6 +56,86 @@ theme_override_font_sizes/font_size = 12
 text = "Mode A: Offline Single-Player | Mode C: WebGL2 Browser Ready"
 horizontal_alignment = 1
 
+[node name="CharacterSelectCard" type="PanelContainer" parent="CenterContainer/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="CenterContainer/VBox/CharacterSelectCard"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="CardHeader" type="Label" parent="CenterContainer/VBox/CharacterSelectCard/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.96, 0.77, 0.26, 1)
+theme_override_font_sizes/font_size = 15
+text = "CHOOSE YOUR CITIZEN / ဇာတ်ကောင် ရွေးချယ်ပါ"
+horizontal_alignment = 1
+
+[node name="CharSelectorRow" type="HBoxContainer" parent="CenterContainer/VBox/CharacterSelectCard/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 14
+alignment = 1
+
+[node name="BtnPrevChar" type="Button" parent="CenterContainer/VBox/CharacterSelectCard/VBox/CharSelectorRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(40, 48)
+layout_mode = 2
+text = "◀"
+
+[node name="AvatarFrame" type="PanelContainer" parent="CenterContainer/VBox/CharacterSelectCard/VBox/CharSelectorRow"]
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 2
+
+[node name="CharPreview" type="TextureRect" parent="CenterContainer/VBox/CharacterSelectCard/VBox/CharSelectorRow/AvatarFrame"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+expand_mode = 1
+stretch_mode = 5
+
+[node name="BtnNextChar" type="Button" parent="CenterContainer/VBox/CharacterSelectCard/VBox/CharSelectorRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(40, 48)
+layout_mode = 2
+text = "▶"
+
+[node name="InfoBox" type="VBoxContainer" parent="CenterContainer/VBox/CharacterSelectCard/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="CharNameEdit" type="LineEdit" parent="CenterContainer/VBox/CharacterSelectCard/VBox/InfoBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 36)
+layout_mode = 2
+text = "Ko Thet"
+placeholder_text = "Enter Character Name..."
+alignment = 1
+
+[node name="RoleOptionButton" type="OptionButton" parent="CenterContainer/VBox/CharacterSelectCard/VBox/InfoBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 34)
+layout_mode = 2
+
+[node name="CharDescLabel" type="Label" parent="CenterContainer/VBox/CharacterSelectCard/VBox/InfoBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.85, 0.85, 1)
+theme_override_font_sizes/font_size = 12
+text = "Arrived in downtown Yangon with modest savings."
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="CharBonusLabel" type="Label" parent="CenterContainer/VBox/CharacterSelectCard/VBox/InfoBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 0.9, 0.5, 1)
+theme_override_font_sizes/font_size = 12
+text = "Starting Perk: Balanced stats | 50,000 MMK"
+horizontal_alignment = 1
+
 [node name="InstructionsCard" type="PanelContainer" parent="CenterContainer/VBox"]
 unique_name_in_owner = true
 layout_mode = 2
