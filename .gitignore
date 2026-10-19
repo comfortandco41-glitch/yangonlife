@@ -3,7 +3,7 @@
 *.translation
 *.tmp
 .import/
-build/
+build/desktop/
 export/
 *.log
 *.crdownload
