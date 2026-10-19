@@ -1,0 +1,18 @@
+[gd_scene load_steps=5 format=3 uid="uid://d3yq8u7s4x1w2"]
+
+[ext_resource type="Script" path="res://scripts/missions/mission_clear_sector.gd" id="1_mission"]
+[ext_resource type="PackedScene" uid="uid://cxn81p4k02mvd" path="res://scenes/environment/yangon_arena.tscn" id="2_arena"]
+[ext_resource type="PackedScene" uid="uid://b82d7n2v5w1q6" path="res://scenes/player/player.tscn" id="3_player"]
+[ext_resource type="PackedScene" uid="uid://c7e4g6v5r1x3m" path="res://scenes/ui/hud.tscn" id="4_hud"]
+
+[node name="MainGame" type="Node3D"]
+script = ExtResource("1_mission")
+
+[node name="YangonArena" parent="." instance=ExtResource("2_arena")]
+
+[node name="Player" parent="." instance=ExtResource("3_player")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 0.2, 0)
+
+[node name="Enemies" type="Node3D" parent="."]
+
+[node name="HUD" parent="." instance=ExtResource("4_hud")]

@@ -1,0 +1,11 @@
+# Godot 4+ .gitignore
+.godot/
+*.translation
+*.tmp
+.import/
+build/
+export/
+*.log
+*.crdownload
+.DS_Store
+Thumbs.db
