@@ -7,6 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.7.3] - 2026-10-19 — 3D Ball Avatar, Full-Scale Yangon Map, GPS Minimap, Mobile Keypad & Motorcycles
+
+### Added
+- **3D Ball Player Avatar & Customization:**
+  - Replaced sprite characters with a rolling 3D Ball avatar (`SphereMesh`) featuring realistic angular physics rolling proportional to movement speed and vector.
+  - Interactive Ball Customizer on start screen: 8 signature Burmese color swatches (Gold, Ruby, Jade, Royal Blue, Sunset Orange, Amethyst, Pearl White, Onyx) and a full-range `ColorPickerButton`.
+  - Photo / Texture Upload: Players can upload and wrap their own custom photo or texture directly onto their 3D ball (persisted to `user://ball_custom_photo.png` and save files).
+  - Persistent Floating 3D Nametag (`Label3D`): Always visible above the player's 3D ball throughout the city with bold text, high-contrast black outline, and `no_depth_test` to pop above urban structures.
+- **Full-Scale Downtown Yangon Map Expansion (600m × 600m):**
+  - Expanded the explorable downtown area from 240m to a massive 600m × 600m urban grid.
+  - Added iconic Yangon districts & landmarks:
+    - **Chinatown & 19th Street Night Market** (`x = -130, z = 30`) with traditional Chinese gate arch and parked motorcycle.
+    - **Theingyi Zei Wholesale Bazaar** (`x = -130, z = -90`) with market halls and textile awnings.
+    - **The Secretariat Building (ဝန်ကြီးများရုံး)** (`x = 130, z = -90`) historic Victorian colonial red-brick complex.
+    - **Strand Riverfront Promenade & Ferry Pier** (`z = 240`) overlooking the Yangon River with maritime jetty and parked motorcycle.
+    - **Yangon Central Railway Station (ဘူတာကြီး)** (`z = -220`) with grand tiered facade, tracks, platforms, and taxi queue.
+- **Drivable Yangon Motorcycle:**
+  - New drivable two-wheeler vehicle scene (`scenes/vehicles/motorcycle.tscn`) with agile speed (18 m/s ~65 km/h), high acceleration, fuel tracking, exhaust pipe, and third-person chase camera.
+  - Multiple motorcycles parked across the city (at Chinatown 19th St and Strand Riverfront) alongside Yellow-Top Taxis and Delivery Bicycles.
+- **On-Screen Real-Time GPS Minimap Radar:**
+  - Added HUD Minimap radar widget (`scripts/ui/hud_minimap.gd`) at top-right of the play screen.
+  - Visualizes city roads, landmark POIs (Sule, City Hall, Park, Chinatown, Secretariat, Riverfront, Railway Station), player orientation chevron, and nearby vehicles.
+  - Dynamic district detection badge ("📍 Chinatown 19th St", "📍 Strand Riverfront & Ferry Jetty", etc.) and real-time GPS coordinate counter.
+  - Interactive zoom toggle button (80m, 160m, 300m range).
+- **On-Screen Mobile Virtual Keypad & Touch Controls:**
+  - Added mobile virtual touch controller (`scripts/ui/mobile_keypad.gd`) with left-hand virtual D-Pad (`▲`, `▼`, `◀`, `▶`, `🏃 Sprint`) and right-hand action buttons (`[E] Interact`, `🚗 Ride/Exit`, `⬆️ Jump`, `📱 Phone`, `🎒 Bag`, `⟲Q / ⟳R Cam Rotate`).
+  - Native Godot Input action dispatching and HUD `[📱 Touch]` toggle button.
+- **Suite 21 Automated Tests:** Added comprehensive unit verification in `tests/test_ball_and_city.gd`, bringing the test suite to **460 passed tests with 0 failures**.
+
 ## [0.7.2] - 2026-10-19 — Isometric Style Pivot, Character Selection & Animated 2D Citizens
 
 ### Added

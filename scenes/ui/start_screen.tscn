@@ -23,21 +23,21 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="VBox" type="VBoxContainer" parent="CenterContainer"]
-custom_minimum_size = Vector2(560, 0)
+custom_minimum_size = Vector2(580, 0)
 layout_mode = 2
-theme_override_constants/separation = 20
+theme_override_constants/separation = 16
 alignment = 1
 
 [node name="TitleBox" type="VBoxContainer" parent="CenterContainer/VBox"]
 layout_mode = 2
-theme_override_constants/separation = 6
+theme_override_constants/separation = 4
 alignment = 1
 
 [node name="TitleLabel" type="Label" parent="CenterContainer/VBox/TitleBox"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.96, 0.77, 0.26, 1)
-theme_override_font_sizes/font_size = 40
+theme_override_font_sizes/font_size = 38
 text = "YANGON LIFE (ရန်ကုန် ဘဝ)"
 horizontal_alignment = 1
 
@@ -45,15 +45,15 @@ horizontal_alignment = 1
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.8, 0.85, 0.9, 1)
-theme_override_font_sizes/font_size = 18
-text = "Low-Poly Open-World Urban Simulation"
+theme_override_font_sizes/font_size = 16
+text = "Full-Scale Open-World Yangon Life Simulation"
 horizontal_alignment = 1
 
 [node name="VersionLabel" type="Label" parent="CenterContainer/VBox/TitleBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.45, 0.55, 0.65, 1)
 theme_override_font_sizes/font_size = 12
-text = "Mode A: Offline Single-Player | Mode C: WebGL2 Browser Ready"
+text = "Downtown Yangon • Drive Cars, Motorcycles & Bicycles • Real-Time GPS Minimap"
 horizontal_alignment = 1
 
 [node name="CharacterSelectCard" type="PanelContainer" parent="CenterContainer/VBox"]
@@ -67,74 +67,167 @@ theme_override_constants/separation = 10
 [node name="CardHeader" type="Label" parent="CenterContainer/VBox/CharacterSelectCard/VBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.96, 0.77, 0.26, 1)
-theme_override_font_sizes/font_size = 15
-text = "CHOOSE YOUR CITIZEN / ဇာတ်ကောင် ရွေးချယ်ပါ"
+theme_override_font_sizes/font_size = 14
+text = "3D BALL CITIZEN CUSTOMIZER / မိမိ၏ 3D ဇာတ်ကောင်ဘောလုံး စိတ်ကြိုက်ပြင်ပါ"
 horizontal_alignment = 1
 
-[node name="CharSelectorRow" type="HBoxContainer" parent="CenterContainer/VBox/CharacterSelectCard/VBox"]
+[node name="CustomizerHBox" type="HBoxContainer" parent="CenterContainer/VBox/CharacterSelectCard/VBox"]
 layout_mode = 2
-theme_override_constants/separation = 14
+theme_override_constants/separation = 16
 alignment = 1
 
-[node name="BtnPrevChar" type="Button" parent="CenterContainer/VBox/CharacterSelectCard/VBox/CharSelectorRow"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(40, 48)
+[node name="BallPreviewContainer" type="VBoxContainer" parent="CenterContainer/VBox/CharacterSelectCard/VBox/CustomizerHBox"]
 layout_mode = 2
-text = "◀"
+theme_override_constants/separation = 6
+alignment = 1
 
-[node name="AvatarFrame" type="PanelContainer" parent="CenterContainer/VBox/CharacterSelectCard/VBox/CharSelectorRow"]
+[node name="AvatarFrame" type="PanelContainer" parent="CenterContainer/VBox/CharacterSelectCard/VBox/CustomizerHBox/BallPreviewContainer"]
+custom_minimum_size = Vector2(88, 88)
+layout_mode = 2
+
+[node name="BallPreview" type="TextureRect" parent="CenterContainer/VBox/CharacterSelectCard/VBox/CustomizerHBox/BallPreviewContainer/AvatarFrame"]
 custom_minimum_size = Vector2(80, 80)
-layout_mode = 2
-
-[node name="CharPreview" type="TextureRect" parent="CenterContainer/VBox/CharacterSelectCard/VBox/CharSelectorRow/AvatarFrame"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(72, 72)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 expand_mode = 1
 stretch_mode = 5
 
-[node name="BtnNextChar" type="Button" parent="CenterContainer/VBox/CharacterSelectCard/VBox/CharSelectorRow"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(40, 48)
+[node name="CharPreview" type="TextureRect" parent="CenterContainer/VBox/CharacterSelectCard/VBox/CustomizerHBox/BallPreviewContainer/AvatarFrame"]
+visible = false
+custom_minimum_size = Vector2(80, 80)
 layout_mode = 2
-text = "▶"
+size_flags_horizontal = 4
+size_flags_vertical = 4
+expand_mode = 1
+stretch_mode = 5
 
-[node name="InfoBox" type="VBoxContainer" parent="CenterContainer/VBox/CharacterSelectCard/VBox"]
+[node name="BtnUploadPhoto" type="Button" parent="CenterContainer/VBox/CharacterSelectCard/VBox/CustomizerHBox/BallPreviewContainer"]
+custom_minimum_size = Vector2(100, 28)
+layout_mode = 2
+theme_override_font_sizes/font_size = 11
+text = "📁 Upload Photo"
+
+[node name="CustomizerDetails" type="VBoxContainer" parent="CenterContainer/VBox/CharacterSelectCard/VBox/CustomizerHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="NameAndRoleRow" type="HBoxContainer" parent="CenterContainer/VBox/CharacterSelectCard/VBox/CustomizerHBox/CustomizerDetails"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="CharNameEdit" type="LineEdit" parent="CenterContainer/VBox/CharacterSelectCard/VBox/CustomizerHBox/CustomizerDetails/NameAndRoleRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(160, 32)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Ko Thet"
+placeholder_text = "Enter Name..."
+alignment = 1
+
+[node name="RoleOptionButton" type="OptionButton" parent="CenterContainer/VBox/CharacterSelectCard/VBox/CustomizerHBox/CustomizerDetails/NameAndRoleRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(160, 32)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ColorSection" type="VBoxContainer" parent="CenterContainer/VBox/CharacterSelectCard/VBox/CustomizerHBox/CustomizerDetails"]
 layout_mode = 2
 theme_override_constants/separation = 4
 
-[node name="CharNameEdit" type="LineEdit" parent="CenterContainer/VBox/CharacterSelectCard/VBox/InfoBox"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 36)
-layout_mode = 2
-text = "Ko Thet"
-placeholder_text = "Enter Character Name..."
-alignment = 1
-
-[node name="RoleOptionButton" type="OptionButton" parent="CenterContainer/VBox/CharacterSelectCard/VBox/InfoBox"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 34)
-layout_mode = 2
-
-[node name="CharDescLabel" type="Label" parent="CenterContainer/VBox/CharacterSelectCard/VBox/InfoBox"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 32)
+[node name="ColorLabel" type="Label" parent="CenterContainer/VBox/CharacterSelectCard/VBox/CustomizerHBox/CustomizerDetails/ColorSection"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.85, 0.85, 0.85, 1)
-theme_override_font_sizes/font_size = 12
+theme_override_font_sizes/font_size = 11
+text = "Choose 3D Ball Color Palette:"
+
+[node name="ColorSwatchesRow" type="HBoxContainer" parent="CenterContainer/VBox/CharacterSelectCard/VBox/CustomizerHBox/CustomizerDetails/ColorSection"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="ColorSwatch0" type="Button" parent="CenterContainer/VBox/CharacterSelectCard/VBox/CustomizerHBox/CustomizerDetails/ColorSection/ColorSwatchesRow"]
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.84, 0, 1)
+text = "🟡"
+
+[node name="ColorSwatch1" type="Button" parent="CenterContainer/VBox/CharacterSelectCard/VBox/CustomizerHBox/CustomizerDetails/ColorSection/ColorSwatchesRow"]
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.2, 0.2, 1)
+text = "🔴"
+
+[node name="ColorSwatch2" type="Button" parent="CenterContainer/VBox/CharacterSelectCard/VBox/CustomizerHBox/CustomizerDetails/ColorSection/ColorSwatchesRow"]
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.8, 0.3, 1)
+text = "🟢"
+
+[node name="ColorSwatch3" type="Button" parent="CenterContainer/VBox/CharacterSelectCard/VBox/CustomizerHBox/CustomizerDetails/ColorSection/ColorSwatchesRow"]
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.5, 0.9, 1)
+text = "🔵"
+
+[node name="ColorSwatch4" type="Button" parent="CenterContainer/VBox/CharacterSelectCard/VBox/CustomizerHBox/CustomizerDetails/ColorSection/ColorSwatchesRow"]
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.5, 0.1, 1)
+text = "🟠"
+
+[node name="ColorSwatch5" type="Button" parent="CenterContainer/VBox/CharacterSelectCard/VBox/CustomizerHBox/CustomizerDetails/ColorSection/ColorSwatchesRow"]
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.3, 0.8, 1)
+text = "🟣"
+
+[node name="ColorSwatch6" type="Button" parent="CenterContainer/VBox/CharacterSelectCard/VBox/CustomizerHBox/CustomizerDetails/ColorSection/ColorSwatchesRow"]
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.95, 0.95, 1)
+text = "⚪"
+
+[node name="ColorSwatch7" type="Button" parent="CenterContainer/VBox/CharacterSelectCard/VBox/CustomizerHBox/CustomizerDetails/ColorSection/ColorSwatchesRow"]
+custom_minimum_size = Vector2(28, 28)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.2, 0.2, 1)
+text = "⚫"
+
+[node name="ColorPickerBtn" type="ColorPickerButton" parent="CenterContainer/VBox/CharacterSelectCard/VBox/CustomizerHBox/CustomizerDetails/ColorSection/ColorSwatchesRow"]
+custom_minimum_size = Vector2(34, 28)
+layout_mode = 2
+text = "🎨"
+color = Color(0.98, 0.72, 0.15, 1)
+
+[node name="CharDescLabel" type="Label" parent="CenterContainer/VBox/CharacterSelectCard/VBox/CustomizerHBox/CustomizerDetails"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.85, 0.85, 1)
+theme_override_font_sizes/font_size = 11
 text = "Arrived in downtown Yangon with modest savings."
-horizontal_alignment = 1
 autowrap_mode = 2
 
-[node name="CharBonusLabel" type="Label" parent="CenterContainer/VBox/CharacterSelectCard/VBox/InfoBox"]
+[node name="CharBonusLabel" type="Label" parent="CenterContainer/VBox/CharacterSelectCard/VBox/CustomizerHBox/CustomizerDetails"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.4, 0.9, 0.5, 1)
-theme_override_font_sizes/font_size = 12
-text = "Starting Perk: Balanced stats | 50,000 MMK"
-horizontal_alignment = 1
+theme_override_font_sizes/font_size = 11
+text = "Perk: Balanced stats • 50,000 MMK"
+
+[node name="PrevNextRow" type="HBoxContainer" parent="CenterContainer/VBox/CharacterSelectCard/VBox"]
+visible = false
+layout_mode = 2
+
+[node name="BtnPrevChar" type="Button" parent="CenterContainer/VBox/CharacterSelectCard/VBox/PrevNextRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "◀"
+
+[node name="BtnNextChar" type="Button" parent="CenterContainer/VBox/CharacterSelectCard/VBox/PrevNextRow"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "▶"
 
 [node name="InstructionsCard" type="PanelContainer" parent="CenterContainer/VBox"]
 unique_name_in_owner = true
@@ -142,132 +235,82 @@ layout_mode = 2
 
 [node name="VBox" type="VBoxContainer" parent="CenterContainer/VBox/InstructionsCard"]
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 8
 
 [node name="CardHeader" type="Label" parent="CenterContainer/VBox/InstructionsCard/VBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.96, 0.77, 0.26, 1)
-theme_override_font_sizes/font_size = 14
-text = "KEYBOARD & MOUSE CONTROLS"
+theme_override_font_sizes/font_size = 13
+text = "CONTROLS — DESKTOP KEYBOARD & ON-SCREEN MOBILE TOUCH KEYPAD"
 horizontal_alignment = 1
-
-[node name="HSeparator" type="HSeparator" parent="CenterContainer/VBox/InstructionsCard/VBox"]
-layout_mode = 2
 
 [node name="ControlsGrid" type="GridContainer" parent="CenterContainer/VBox/InstructionsCard/VBox"]
 layout_mode = 2
 theme_override_constants/h_separation = 16
-theme_override_constants/v_separation = 8
+theme_override_constants/v_separation = 6
 columns = 2
 
 [node name="KeyMove" type="Label" parent="CenterContainer/VBox/InstructionsCard/VBox/ControlsGrid"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.4, 0.8, 1, 1)
-theme_override_font_sizes/font_size = 13
-text = "[W][A][S][D]"
+theme_override_font_sizes/font_size = 12
+text = "[W][A][S][D] or Virtual D-Pad"
 
 [node name="DescMove" type="Label" parent="CenterContainer/VBox/InstructionsCard/VBox/ControlsGrid"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
-theme_override_font_sizes/font_size = 13
-text = "Move Character in Downtown"
-
-[node name="KeySprint" type="Label" parent="CenterContainer/VBox/InstructionsCard/VBox/ControlsGrid"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.4, 0.8, 1, 1)
-theme_override_font_sizes/font_size = 13
-text = "[Shift]"
-
-[node name="DescSprint" type="Label" parent="CenterContainer/VBox/InstructionsCard/VBox/ControlsGrid"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
-theme_override_font_sizes/font_size = 13
-text = "Sprint (Consumes Energy)"
-
-[node name="KeyJump" type="Label" parent="CenterContainer/VBox/InstructionsCard/VBox/ControlsGrid"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.4, 0.8, 1, 1)
-theme_override_font_sizes/font_size = 13
-text = "[Space]"
-
-[node name="DescJump" type="Label" parent="CenterContainer/VBox/InstructionsCard/VBox/ControlsGrid"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
-theme_override_font_sizes/font_size = 13
-text = "Jump Over Curbs & Steps"
+theme_override_font_sizes/font_size = 12
+text = "Roll 3D Citizen Ball Across Yangon"
 
 [node name="KeyInteract" type="Label" parent="CenterContainer/VBox/InstructionsCard/VBox/ControlsGrid"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.4, 0.8, 1, 1)
-theme_override_font_sizes/font_size = 13
-text = "[E]"
+theme_override_font_sizes/font_size = 12
+text = "[E] or [E] Touch Button"
 
 [node name="DescInteract" type="Label" parent="CenterContainer/VBox/InstructionsCard/VBox/ControlsGrid"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
-theme_override_font_sizes/font_size = 13
-text = "Contextual Interact (Stall, Tea, Job)"
+theme_override_font_sizes/font_size = 12
+text = "Drive Taxis, Ride Motorcycles & Bicycles, Stalls"
 
 [node name="KeyVehicle" type="Label" parent="CenterContainer/VBox/InstructionsCard/VBox/ControlsGrid"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.4, 0.8, 1, 1)
-theme_override_font_sizes/font_size = 13
-text = "[F]"
+theme_override_font_sizes/font_size = 12
+text = "[F] or 🚗 Touch Button"
 
 [node name="DescVehicle" type="Label" parent="CenterContainer/VBox/InstructionsCard/VBox/ControlsGrid"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
-theme_override_font_sizes/font_size = 13
-text = "Enter / Exit Vehicles"
+theme_override_font_sizes/font_size = 12
+text = "Embark / Disembark Vehicles"
 
-[node name="KeyPhone" type="Label" parent="CenterContainer/VBox/InstructionsCard/VBox/ControlsGrid"]
+[node name="KeyMap" type="Label" parent="CenterContainer/VBox/InstructionsCard/VBox/ControlsGrid"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.4, 0.8, 1, 1)
-theme_override_font_sizes/font_size = 13
-text = "[P]"
+theme_override_font_sizes/font_size = 12
+text = "GPS Minimap (Top-Right)"
 
-[node name="DescPhone" type="Label" parent="CenterContainer/VBox/InstructionsCard/VBox/ControlsGrid"]
+[node name="DescMap" type="Label" parent="CenterContainer/VBox/InstructionsCard/VBox/ControlsGrid"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
-theme_override_font_sizes/font_size = 13
-text = "Smartphone (Bank, Jobs, GPS, Status)"
-
-[node name="KeyInv" type="Label" parent="CenterContainer/VBox/InstructionsCard/VBox/ControlsGrid"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.4, 0.8, 1, 1)
-theme_override_font_sizes/font_size = 13
-text = "[I]"
-
-[node name="DescInv" type="Label" parent="CenterContainer/VBox/InstructionsCard/VBox/ControlsGrid"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
-theme_override_font_sizes/font_size = 13
-text = "Backpack Inventory (16 Slots)"
-
-[node name="KeyPause" type="Label" parent="CenterContainer/VBox/InstructionsCard/VBox/ControlsGrid"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.4, 0.8, 1, 1)
-theme_override_font_sizes/font_size = 13
-text = "[Esc]"
-
-[node name="DescPause" type="Label" parent="CenterContainer/VBox/InstructionsCard/VBox/ControlsGrid"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
-theme_override_font_sizes/font_size = 13
-text = "Pause Menu / Settings / Close Menus"
+theme_override_font_sizes/font_size = 12
+text = "Live Yangon City Radar & Landmark GPS Tracking"
 
 [node name="StartButton" type="Button" parent="CenterContainer/VBox"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(320, 60)
+custom_minimum_size = Vector2(340, 56)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(1, 0.9, 0.5, 1)
-theme_override_font_sizes/font_size = 22
-text = "Enter Yangon / စတင်မည်"
+theme_override_font_sizes/font_size = 20
+text = "Enter Yangon / မြို့တွင်းသို့ ဝင်ရောက်မည်"
 
-[node name="NoticeLabel" type="Label" parent="CenterContainer/VBox"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.5, 0.6, 0.7, 1)
-theme_override_font_sizes/font_size = 12
-text = "Clicking button locks pointer capture & activates browser WebAudio."
-horizontal_alignment = 1
+[node name="PhotoFileDialog" type="FileDialog" parent="."]
+title = "Choose Photo or Texture for 3D Ball"
+size = Vector2i(600, 400)
+ok_button_text = "Open"
+file_mode = 0
+access = 2
+filters = PackedStringArray("*.png, *.jpg, *.jpeg, *.webp ; Image Files")

@@ -3,15 +3,17 @@ extends CharacterBody3D
 
 const CharacterData = preload("res://scripts/systems/character_data.gd")
 
-## Isometric & Third-Person Player Controller for Yangon Life (ရန်ကုန် ဘဝ).
+## Isometric & 3D Ball Player Controller for Yangon Life (ရန်ကုန် ဘဝ).
 ##
 ## Features:
 ## - Professional isometric camera with overhead angle, smooth target tracking,
 ##   mouse wheel zoom, and Q/E 45° rotation.
-## - 4-direction animated pixel-art character sprite (SuperRetroWorld 32x32 walk cycles).
+## - Customizable 3D Ball avatar with color selection, custom photo/texture upload,
+##   and realistic physics rolling animation.
+## - Persistent floating overhead 3D nametag visible throughout Yangon.
 ## - Screen-relative 8-directional movement with stamina-based sprinting.
-## - Character selection & persistence across save/load.
-## - Contextual interaction trigger and audio integration.
+## - Embark/disembark support for cars, motorcycles, and bicycles.
+## - Character customization & persistence across save/load.
 
 const MOVE_SPEED: float = 5.0
 const SPRINT_SPEED: float = 8.5
@@ -24,10 +26,14 @@ const PITCH_ISOMETRIC: float = deg_to_rad(-45.0)
 @export var character_index: int = 1
 @export var character_name: String = "Ko Thet"
 @export var character_role: String = "Novice Citizen"
+@export var ball_color: Color = Color(0.98, 0.72, 0.15)
+@export var ball_photo_path: String = ""
 
 @onready var camera_yaw: Node3D = $CameraYaw
 @onready var spring_arm: SpringArm3D = $CameraYaw/SpringArm3D
 @onready var camera: Camera3D = $CameraYaw/SpringArm3D/Camera3D
+@onready var player_ball: MeshInstance3D = get_node_or_null("PlayerBall") as MeshInstance3D
+@onready var overhead_label: Label3D = get_node_or_null("OverheadLabel") as Label3D
 @onready var character_sprite: Sprite3D = get_node_or_null("CharacterSprite") as Sprite3D
 @onready var player_mesh: MeshInstance3D = get_node_or_null("PlayerMesh") as MeshInstance3D
 
@@ -43,9 +49,11 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	add_to_group("player")
 
-	# Hide fallback 3D capsule mesh in favor of animated pixel sprite
+	# Hide fallback 3D capsule mesh and 2D sprite in favor of 3D ball
 	if player_mesh:
 		player_mesh.visible = false
+	if character_sprite:
+		character_sprite.visible = false
 
 	# Setup isometric camera defaults
 	if camera_yaw and spring_arm and camera:
@@ -74,7 +82,14 @@ func _ready() -> void:
 		else:
 			global_position = Vector3(0.0, 1.0, 14.0)
 
-	# Load saved or default character appearance
+	# Apply initial ball styling and nametag
+	_update_nametag()
+	_apply_ball_material()
+
+	# Check for saved custom user photo
+	if ball_photo_path.is_empty() and FileAccess.file_exists("user://ball_custom_photo.png"):
+		set_ball_photo_path("user://ball_custom_photo.png")
+
 	apply_character(character_index, character_name, character_role)
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -165,6 +180,14 @@ func _physics_process(delta: float) -> void:
 		velocity.x = move_vec.x * current_speed
 		velocity.z = move_vec.z * current_speed
 
+		# Roll the 3D Ball realistically along the floor
+		if player_ball:
+			var h_speed: float = Vector2(velocity.x, velocity.z).length()
+			if h_speed > 0.05:
+				var roll_axis := Vector3(velocity.z, 0.0, -velocity.x).normalized()
+				var roll_angle := (h_speed * delta) / 0.45
+				player_ball.rotate(roll_axis, roll_angle)
+
 		# Update footstep audio
 		if is_on_floor():
 			_footstep_distance += current_speed * delta
@@ -173,31 +196,76 @@ func _physics_process(delta: float) -> void:
 				var am: Node = get_node_or_null("/root/AudioManager")
 				if am and am.has_method("play_footstep"):
 					am.call("play_footstep")
-
-		# Determine sprite facing direction relative to screen inputs
-		if absf(input_dir.y) >= absf(input_dir.x):
-			_facing_row = 0 if input_dir.y > 0.0 else 3 # Down vs Up
-		else:
-			_facing_row = 2 if input_dir.x > 0.0 else 1 # Right vs Left
-
-		# Animate 3-frame walk cycle [0, 1, 2, 1]
-		_anim_timer += delta * (10.0 if is_sprinting else 7.0)
-		var step: int = int(_anim_timer) % 4
-		var frame_col: int = 1 if (step == 1 or step == 3) else (0 if step == 0 else 2)
-		if character_sprite:
-			character_sprite.frame = _facing_row * 3 + frame_col
 	else:
 		velocity.x = move_toward(velocity.x, 0.0, current_speed)
 		velocity.z = move_toward(velocity.z, 0.0, current_speed)
 		_footstep_distance = 0.0
-		_anim_timer = 0.0
-		# Idle: stand at neutral frame in current facing row
-		if character_sprite:
-			character_sprite.frame = _facing_row * 3 + 1
 
 	move_and_slide()
 
-## Applies a selected character appearance, name, and role
+## Changes the 3D ball color
+func set_ball_color(col: Color) -> void:
+	ball_color = col
+	_apply_ball_material()
+
+## Loads and wraps a custom photo onto the 3D ball
+func set_ball_photo_path(path: String) -> void:
+	ball_photo_path = path
+	if not FileAccess.file_exists(path):
+		return
+	var img := Image.load_from_file(path)
+	if img:
+		var tex := ImageTexture.create_from_image(img)
+		set_ball_texture(tex)
+
+## Applies a texture directly to the 3D ball material
+func set_ball_texture(tex: Texture2D) -> void:
+	if not player_ball:
+		player_ball = get_node_or_null("PlayerBall") as MeshInstance3D
+	if player_ball:
+		var mat := _get_or_create_ball_material()
+		mat.albedo_texture = tex
+
+## Applies ball color and material parameters
+func _apply_ball_material() -> void:
+	if not player_ball:
+		player_ball = get_node_or_null("PlayerBall") as MeshInstance3D
+	if player_ball:
+		var mat := _get_or_create_ball_material()
+		mat.albedo_color = ball_color
+
+func _get_or_create_ball_material() -> StandardMaterial3D:
+	if not player_ball:
+		return null
+	var mat: StandardMaterial3D = player_ball.get_surface_override_material(0) as StandardMaterial3D
+	if not mat:
+		var orig_mat = player_ball.mesh.surface_get_material(0) if player_ball.mesh else null
+		if orig_mat is StandardMaterial3D:
+			mat = orig_mat.duplicate() as StandardMaterial3D
+		else:
+			mat = StandardMaterial3D.new()
+			mat.metallic = 0.15
+			mat.roughness = 0.35
+		player_ball.set_surface_override_material(0, mat)
+	return mat
+
+## Updates the persistent floating nametag above the ball
+func _update_nametag() -> void:
+	if not overhead_label:
+		overhead_label = get_node_or_null("OverheadLabel") as Label3D
+	if overhead_label:
+		overhead_label.text = "%s\n%s" % [character_name, character_role]
+
+## Sets player name and role, immediately updating the overhead nametag
+func set_player_name(pname: String, role: String = "") -> void:
+	if not pname.is_empty():
+		character_name = pname
+	if not role.is_empty():
+		character_role = role
+	_update_nametag()
+	_update_ui_avatars()
+
+## Applies character details for backwards compatibility
 func apply_character(index: int, cname: String = "", crole: String = "") -> void:
 	character_index = clampi(index, 1, CharacterData.TOTAL_CHARACTERS)
 	if not cname.is_empty():
@@ -205,21 +273,11 @@ func apply_character(index: int, cname: String = "", crole: String = "") -> void
 	if not crole.is_empty():
 		character_role = crole
 
-	if character_sprite:
-		var path: String = CharacterData.get_sprite_sheet_path(character_index)
-		var tex: Texture2D = load(path) as Texture2D
-		if tex:
-			character_sprite.texture = tex
-			character_sprite.frame = _facing_row * 3 + 1
-
+	_update_nametag()
 	_update_ui_avatars()
 
 ## Synchronizes HUD and Phone Menu profile avatars
 func _update_ui_avatars() -> void:
-	var portrait: AtlasTexture = CharacterData.get_character_portrait(character_index)
-	if not portrait:
-		return
-
 	# Update HUD player avatar
 	var hud: Node = get_tree().get_first_node_in_group("hud")
 	if not hud:
@@ -227,24 +285,25 @@ func _update_ui_avatars() -> void:
 	if hud:
 		var avatar_rect: TextureRect = hud.get_node_or_null("MarginContainer/TopSection/AvatarCard/PlayerAvatar") as TextureRect
 		if avatar_rect:
-			avatar_rect.texture = portrait
+			# If custom photo exists, display it; otherwise generate a clean colored ball portrait
+			var mat: StandardMaterial3D = _get_or_create_ball_material()
+			if mat and mat.albedo_texture:
+				avatar_rect.texture = mat.albedo_texture
+			else:
+				var portrait: AtlasTexture = CharacterData.get_character_portrait(character_index)
+				if portrait:
+					avatar_rect.texture = portrait
 
 	# Update Phone status and profile
 	var phone: Node = get_node_or_null("../UI/PhoneMenu")
 	if phone:
-		var home_avatar: TextureRect = phone.get_node_or_null("%ProfileCard/HBox/AvatarIcon") as TextureRect
-		if home_avatar:
-			home_avatar.texture = portrait
 		var home_name: Label = phone.get_node_or_null("%ProfileCard/HBox/VBox/NameLabel") as Label
 		if home_name:
 			home_name.text = "%s (%s)" % [character_name, character_role]
 
-		var status_avatar: TextureRect = phone.get_node_or_null("%StatusProfile/HBox/AvatarIcon") as TextureRect
-		if status_avatar:
-			status_avatar.texture = portrait
 		var status_name: Label = phone.get_node_or_null("%StatusProfile/HBox/VBox/StatusName") as Label
 		if status_name:
-			status_name.text = "Character: %s" % character_name
+			status_name.text = "Citizen: %s" % character_name
 		var status_rep: Label = phone.get_node_or_null("%StatusProfile/HBox/VBox/StatusRep") as Label
 		if status_rep:
 			status_rep.text = "%s • Good Standing" % character_role
@@ -261,7 +320,7 @@ func _on_game_paused() -> void:
 func _on_game_resumed() -> void:
 	pass
 
-## Returns player transform and character data for persistent save files
+## Returns player transform, ball styling, and character data for persistent save files
 func get_save_data() -> Dictionary:
 	var pos: Vector3 = global_position if is_inside_tree() else position
 	return {
@@ -269,10 +328,12 @@ func get_save_data() -> Dictionary:
 		"rotation_y": rotation.y,
 		"character_index": character_index,
 		"character_name": character_name,
-		"character_role": character_role
+		"character_role": character_role,
+		"ball_color": ball_color.to_html(),
+		"ball_photo_path": ball_photo_path
 	}
 
-## Restores player transform and character data from persistent save files
+## Restores player transform, ball styling, and character data from persistent save files
 func load_save_data(data: Dictionary) -> void:
 	if data.has("position"):
 		var pos_arr: Variant = data["position"]
@@ -290,4 +351,11 @@ func load_save_data(data: Dictionary) -> void:
 		character_name = String(data["character_name"])
 	if data.has("character_role"):
 		character_role = String(data["character_role"])
+	if data.has("ball_color"):
+		ball_color = Color.from_string(String(data["ball_color"]), ball_color)
+		_apply_ball_material()
+	if data.has("ball_photo_path"):
+		ball_photo_path = String(data["ball_photo_path"])
+		if not ball_photo_path.is_empty():
+			set_ball_photo_path(ball_photo_path)
 	apply_character(character_index, character_name, character_role)

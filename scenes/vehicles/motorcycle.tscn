@@ -1,0 +1,146 @@
+[gd_scene load_steps=18 format=3 uid="uid://c8motorcycle001"]
+
+[ext_resource type="Script" path="res://scripts/vehicles/vehicle_controller.gd" id="1_vehicle"]
+[ext_resource type="Script" path="res://scripts/interaction/interactable_zone.gd" id="2_interactable"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_moto_col"]
+size = Vector3(0.8, 1.3, 2.0)
+
+[sub_resource type="StandardMaterial3D" id="Mat_MotoRed"]
+albedo_color = Color(0.85, 0.15, 0.12, 1)
+metallic = 0.6
+roughness = 0.35
+
+[sub_resource type="BoxMesh" id="BoxMesh_body"]
+material = SubResource("Mat_MotoRed")
+size = Vector3(0.4, 0.55, 1.3)
+
+[sub_resource type="StandardMaterial3D" id="Mat_MotoSeat"]
+albedo_color = Color(0.12, 0.12, 0.14, 1)
+roughness = 0.9
+
+[sub_resource type="BoxMesh" id="BoxMesh_seat"]
+material = SubResource("Mat_MotoSeat")
+size = Vector3(0.36, 0.15, 0.7)
+
+[sub_resource type="StandardMaterial3D" id="Mat_MotoEngine"]
+albedo_color = Color(0.35, 0.38, 0.42, 1)
+metallic = 0.85
+roughness = 0.25
+
+[sub_resource type="BoxMesh" id="BoxMesh_engine"]
+material = SubResource("Mat_MotoEngine")
+size = Vector3(0.32, 0.35, 0.45)
+
+[sub_resource type="StandardMaterial3D" id="Mat_MotoTire"]
+albedo_color = Color(0.08, 0.08, 0.08, 1)
+roughness = 0.9
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_motowheel"]
+material = SubResource("Mat_MotoTire")
+top_radius = 0.35
+bottom_radius = 0.35
+height = 0.16
+
+[sub_resource type="StandardMaterial3D" id="Mat_Handlebars"]
+albedo_color = Color(0.65, 0.68, 0.72, 1)
+metallic = 0.9
+roughness = 0.2
+
+[sub_resource type="BoxMesh" id="BoxMesh_handlebars"]
+material = SubResource("Mat_Handlebars")
+size = Vector3(0.75, 0.06, 0.06)
+
+[sub_resource type="StandardMaterial3D" id="Mat_Headlight"]
+albedo_color = Color(1, 1, 0.9, 1)
+emission_enabled = true
+emission = Color(1, 1, 0.8, 1)
+emission_energy_multiplier = 1.2
+
+[sub_resource type="BoxMesh" id="BoxMesh_headlight"]
+material = SubResource("Mat_Headlight")
+size = Vector3(0.22, 0.2, 0.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_exhaust"]
+material = SubResource("Mat_MotoEngine")
+size = Vector3(0.08, 0.08, 0.65)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_door"]
+size = Vector3(1.2, 1.4, 1.8)
+
+[node name="Motorcycle" type="CharacterBody3D"]
+collision_layer = 4
+collision_mask = 5
+script = ExtResource("1_vehicle")
+vehicle_name = "Yangon Motorcycle"
+max_speed = 18.0
+acceleration = 10.0
+braking = 16.0
+reverse_speed = 4.0
+steering_speed = 3.2
+max_steering_angle = 0.65
+fuel_capacity = 10.0
+fuel_consumption_rate = 0.04
+is_motorized = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 0)
+shape = SubResource("BoxShape3D_moto_col")
+
+[node name="Body" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 0)
+mesh = SubResource("BoxMesh_body")
+
+[node name="Seat" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0.2)
+mesh = SubResource("BoxMesh_seat")
+
+[node name="Engine" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, -0.05)
+mesh = SubResource("BoxMesh_engine")
+
+[node name="Wheel_F" type="MeshInstance3D" parent="."]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0.35, -0.75)
+mesh = SubResource("CylinderMesh_motowheel")
+
+[node name="Wheel_R" type="MeshInstance3D" parent="."]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0.35, 0.75)
+mesh = SubResource("CylinderMesh_motowheel")
+
+[node name="Handlebars" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.05, -0.5)
+mesh = SubResource("BoxMesh_handlebars")
+
+[node name="Headlight" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, -0.85)
+mesh = SubResource("BoxMesh_headlight")
+
+[node name="Exhaust" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.18, 0.3, 0.5)
+mesh = SubResource("BoxMesh_exhaust")
+
+[node name="DoorArea" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, 0.6, 0)
+collision_layer = 8
+collision_mask = 2
+script = ExtResource("2_interactable")
+prompt_text = "Ride Motorcycle (E)"
+interaction_type = "vehicle"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DoorArea"]
+shape = SubResource("BoxShape3D_door")
+
+[node name="ExitPoint" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.0, 0, 0)
+
+[node name="CameraMount" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3, 0)
+
+[node name="SpringArm3D" type="SpringArm3D" parent="CameraMount"]
+transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 0, 0)
+collision_mask = 1
+spring_length = 4.2
+
+[node name="Camera3D" type="Camera3D" parent="CameraMount/SpringArm3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4.2)
+fov = 75.0

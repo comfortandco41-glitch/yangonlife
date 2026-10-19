@@ -28,6 +28,7 @@ const TrafficCarScript = preload("res://scripts/vehicles/traffic_car.gd")
 const WeatherControllerScript = preload("res://scripts/simulation/weather_controller.gd")
 const TestM5UISuiteScript = preload("res://tests/test_m5_ui_suite.gd")
 const TestM7PolishSuiteScript = preload("res://tests/test_m7_polish_suite.gd")
+const TestBallAndCityScript = preload("res://tests/test_ball_and_city.gd")
 
 var _gm: Node
 var _em: Node
@@ -150,6 +151,7 @@ func _run_all_tests() -> void:
 	_test_m4_living_city_systems()
 	_test_m5_ui_suite()
 	_test_m7_polish_suite()
+	_test_ball_and_city()
 
 	print("\n--------------------------------------------------")
 	print("TEST RESULTS: %d PASSED, %d FAILED" % [tests_passed, tests_failed])
@@ -944,6 +946,15 @@ func _test_m7_polish_suite() -> void:
 	tests_passed += m7_suite.tests_passed
 	tests_failed += m7_suite.tests_failed
 	m7_suite.queue_free()
+
+func _test_ball_and_city() -> void:
+	var ball_suite := TestBallAndCityScript.new()
+	root.add_child(ball_suite)
+	ball_suite.run_all()
+	tests_passed += ball_suite.tests_passed
+	tests_failed += ball_suite.tests_failed
+	ball_suite.queue_free()
+
 
 
 

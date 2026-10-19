@@ -1,7 +1,7 @@
 # Project State — Yangon Life (ရန်ကုန် ဘဝ)
 
 **Last Updated:** 2026-10-19  
-**Current Milestone:** Release 0.7.2 — Isometric Style Pivot, Character Selection & Animated Citizens (**100% DONE**)  
+**Current Milestone:** Release 0.7.3 — 3D Ball Avatar, Full-Scale Yangon Map, Minimap & Motorcycles (**100% DONE**)  
 **Status:** PRODUCTION READY (Desktop Standalone & WebGL2 Browser Distribution)
 
 ---

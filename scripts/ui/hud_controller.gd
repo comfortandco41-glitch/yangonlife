@@ -1,5 +1,6 @@
 extends CanvasLayer
-## HUD Controller — displays money, time, needs, and interaction prompts
+## HUD Controller — displays money, time, needs, interaction prompts,
+## real-time GPS Minimap radar, and mobile virtual keypad controls.
 
 const CharacterData = preload("res://scripts/systems/character_data.gd")
 
@@ -11,6 +12,15 @@ const CharacterData = preload("res://scripts/systems/character_data.gd")
 @onready var hygiene_bar: ProgressBar = %HygieneBar if has_node("%HygieneBar") else find_child("HygieneBar", true, false)
 @onready var stress_bar: ProgressBar = %StressBar if has_node("%StressBar") else find_child("StressBar", true, false)
 @onready var interaction_prompt: Label = %InteractionPrompt if has_node("%InteractionPrompt") else find_child("InteractionPrompt", true, false)
+
+@onready var minimap_radar: Control = find_child("MinimapRadar", true, false)
+@onready var district_label: Label = find_child("DistrictLabel", true, false)
+@onready var gps_coords_label: Label = find_child("GPSCoordsLabel", true, false)
+@onready var btn_zoom_map: Button = find_child("BtnZoomMap", true, false)
+@onready var mobile_keypad: Control = find_child("MobileKeypad", true, false)
+@onready var btn_toggle_touch: Button = find_child("BtnToggleTouch", true, false)
+
+var _player_ref: Node3D = null
 
 func _ready() -> void:
 	# Connect to EconomyManager
@@ -65,6 +75,37 @@ func _ready() -> void:
 		var portrait: AtlasTexture = CharacterData.get_character_portrait(1)
 		if portrait:
 			avatar_rect.texture = portrait
+
+	# Setup Minimap callbacks
+	if minimap_radar and minimap_radar.has_signal("district_changed"):
+		minimap_radar.district_changed.connect(_on_district_changed)
+
+	if btn_zoom_map and minimap_radar and minimap_radar.has_method("toggle_zoom"):
+		btn_zoom_map.pressed.connect(func():
+			var r = minimap_radar.toggle_zoom()
+			btn_zoom_map.text = "🔍 %.0fm" % r
+		)
+
+	# Setup Mobile touch controls toggle
+	if btn_toggle_touch and mobile_keypad:
+		btn_toggle_touch.pressed.connect(func():
+			if mobile_keypad.has_method("toggle_keypad"):
+				mobile_keypad.toggle_keypad()
+		)
+
+func _process(_delta: float) -> void:
+	if not is_instance_valid(_player_ref):
+		var p_nodes := get_tree().get_nodes_in_group("player")
+		if not p_nodes.is_empty():
+			_player_ref = p_nodes[0] as Node3D
+
+	if is_instance_valid(_player_ref) and gps_coords_label:
+		var pos := _player_ref.global_position
+		gps_coords_label.text = "GPS: X: %+.0fm  Z: %+.0fm" % [pos.x, pos.z]
+
+func _on_district_changed(district: String) -> void:
+	if district_label:
+		district_label.text = "📍 " + district
 
 ## Updates the player portrait icon with a cropped 32x32 face
 func set_player_avatar(character_index: int) -> void:

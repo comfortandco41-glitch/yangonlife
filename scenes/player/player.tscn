@@ -1,11 +1,11 @@
-[gd_scene load_steps=5 format=3 uid="uid://c8playercontroller01"]
+[gd_scene load_steps=8 format=3 uid="uid://c8playercontroller01"]
 
 [ext_resource type="Script" path="res://scripts/player/third_person_controller.gd" id="1_controller"]
 [ext_resource type="Texture2D" path="res://assets/new/SuperRetroWorld_CharacterPack_Full/SuperRetroWorld_CharacterPack_Full/sprite_split/character_1/character_1_frame32x32.png" id="2_charsprite"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_player"]
-radius = 0.35
-height = 1.8
+radius = 0.45
+height = 1.0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_player"]
 albedo_color = Color(0.266667, 0.533333, 0.8, 1)
@@ -16,15 +16,27 @@ material = SubResource("StandardMaterial3D_player")
 radius = 0.35
 height = 1.8
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ball"]
+albedo_color = Color(0.98, 0.72, 0.15, 1)
+metallic = 0.15
+roughness = 0.35
+
+[sub_resource type="SphereMesh" id="SphereMesh_ball"]
+material = SubResource("StandardMaterial3D_ball")
+radius = 0.45
+height = 0.9
+radial_segments = 32
+rings = 16
+
 [sub_resource type="CylinderMesh" id="CylinderMesh_shadow"]
-top_radius = 0.4
-bottom_radius = 0.4
+top_radius = 0.45
+bottom_radius = 0.45
 height = 0.02
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_shadow"]
 transparency = 1
 shading_mode = 0
-albedo_color = Color(0, 0, 0, 0.45)
+albedo_color = Color(0, 0, 0, 0.4)
 
 [node name="Player" type="CharacterBody3D" groups=["player"]]
 collision_layer = 2
@@ -32,7 +44,7 @@ collision_mask = 13
 script = ExtResource("1_controller")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 shape = SubResource("CapsuleShape3D_player")
 
 [node name="PlayerMesh" type="MeshInstance3D" parent="."]
@@ -42,6 +54,7 @@ mesh = SubResource("CapsuleMesh_player")
 
 [node name="CharacterSprite" type="Sprite3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.88, 0)
+visible = false
 billboard = 2
 alpha_cut = 1
 texture_filter = 0
@@ -50,6 +63,20 @@ hframes = 3
 vframes = 4
 frame = 1
 pixel_size = 0.055
+
+[node name="PlayerBall" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+mesh = SubResource("SphereMesh_ball")
+
+[node name="OverheadLabel" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0)
+billboard = 1
+no_depth_test = true
+font_size = 28
+outline_size = 6
+outline_color = Color(0, 0, 0, 0.95)
+text = "Ko Thet
+Novice Citizen"
 
 [node name="ShadowBlob" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, 0)
