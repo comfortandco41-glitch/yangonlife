@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.7.1] - 2026-10-19 — Hotfix: Player Spawn Collision & 3D Asset Integration
+
+### Fixed
+- **Player Spawn Collision & Camera Clipping Inside Sule Pagoda:**
+  - Resolved issue in `scenes/main/main_game.tscn` where `Player` was initialized at `(0, 1, 0)` directly inside the 8-meter solid cylinder collision base of Sule Pagoda, which trapped player movement and forced the third-person spring arm camera to clip inside the yellow stupa geometry.
+  - Aligned initial player spawn transform in `main_game.tscn` to `(0, 1, 14)` on Sule Pagoda Road plaza.
+  - Added runtime safety clamp in `scripts/player/third_person_controller.gd` (`_ready()`) ensuring any player spawning within 8.0m of world origin automatically relocates to `DowntownYangon/SpawnPoint` or `(0, 1, 14)`.
+  - Added `margin = 0.2` to `SpringArm3D` in `scenes/player/player.tscn` to prevent near-plane clipping against geometry.
+
+### Added
+- **Kenney Suburban & City 3D Asset Integration (`assets/new/kenney_cityKitSuburban/`):**
+  - Instanced lush large and small trees (`tree_large.glb`, `tree_small.glb`) across Maha Bandula Park around the Independence Monument and along Sule Pagoda Road sidewalks.
+  - Added decorative colonial perimeter fencing (`fence_large.glb`) along park boundaries.
+  - Added multi-story colonial houses and suburban shophouses (`house_type01.glb`, `house_type04.glb`, `house_type15.glb`) to Downtown Yangon building blocks.
+- **SuperRetroWorld Character Pack 2D Portrait Integration (`assets/new/SuperRetroWorld_CharacterPack_Full/`):**
+  - Integrated 2D character avatar portraits into `scenes/ui/hud.tscn` top-left citizen header.
+  - Integrated resident avatar portrait into Phone Menu (`scenes/ui/phone_menu.tscn`) Home screen and Life Status app (`character_1`).
+  - Added KBZPay banking agent avatar (`character_2`) into Mobile Banking app.
+  - Added Yangon Jobs employment recruiter avatar (`character_3`) into Careers app.
+
 ## [0.7.0] - 2026-10-19 — Production Release: Milestones M2–M7 Complete
 
 ### Added

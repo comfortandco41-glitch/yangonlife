@@ -35,6 +35,15 @@ func _ready() -> void:
 		if gm.has_signal("game_resumed"):
 			gm.connect("game_resumed", _on_game_resumed)
 
+	# Safety check: if player is spawned within the Sule Pagoda solid collision zone (origin radius 8m),
+	# snap safely to DowntownYangon/SpawnPoint or default (0, 1, 14)
+	if global_position.distance_to(Vector3(0.0, 1.0, 0.0)) < 8.0:
+		var spawn_point: Node3D = get_node_or_null("../DowntownYangon/SpawnPoint") as Node3D
+		if spawn_point:
+			global_position = spawn_point.global_position
+		else:
+			global_position = Vector3(0.0, 1.0, 14.0)
+
 func _unhandled_input(event: InputEvent) -> void:
 	# Pause handling: call GameManager.toggle_pause()
 	if event.is_action_pressed("pause"):

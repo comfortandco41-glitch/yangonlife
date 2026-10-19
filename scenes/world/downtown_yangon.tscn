@@ -10,6 +10,12 @@
 [ext_resource type="Script" path="res://scripts/interaction/gas_pump_handler.gd" id="8_gaspump"]
 [ext_resource type="PackedScene" path="res://scenes/npcs/npc_pedestrian.tscn" id="9_pedestrian"]
 [ext_resource type="PackedScene" path="res://scenes/vehicles/traffic_car.tscn" id="10_trafficcar"]
+[ext_resource type="PackedScene" path="res://assets/new/kenney_cityKitSuburban/Models/GLTF format/tree_large.glb" id="11_treelarge"]
+[ext_resource type="PackedScene" path="res://assets/new/kenney_cityKitSuburban/Models/GLTF format/tree_small.glb" id="12_treesmall"]
+[ext_resource type="PackedScene" path="res://assets/new/kenney_cityKitSuburban/Models/GLTF format/fence_large.glb" id="13_fencelarge"]
+[ext_resource type="PackedScene" path="res://assets/new/kenney_cityKitSuburban/Models/GLTF format/house_type01.glb" id="14_house1"]
+[ext_resource type="PackedScene" path="res://assets/new/kenney_cityKitSuburban/Models/GLTF format/house_type04.glb" id="15_house4"]
+[ext_resource type="PackedScene" path="res://assets/new/kenney_cityKitSuburban/Models/GLTF format/house_type15.glb" id="16_house15"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_sky"]
 sky_top_color = Color(0.385, 0.455, 0.55, 1)
@@ -480,6 +486,15 @@ shape = SubResource("BoxShape3D_apartment")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Buildings/Apartment_A"]
 mesh = SubResource("BoxMesh_apartment")
 
+[node name="ColonialHouse1" parent="Buildings" instance=ExtResource("14_house1")]
+transform = Transform3D(0, 0, 8, 0, 8, 0, -8, 0, 0, 52, 0, 8)
+
+[node name="ColonialHouse2" parent="Buildings" instance=ExtResource("15_house4")]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, -42, 0, 48)
+
+[node name="ColonialHouse3" parent="Buildings" instance=ExtResource("16_house15")]
+transform = Transform3D(8, 0, 0, 0, 8, 0, 0, 0, 8, 42, 0, 36)
+
 [node name="SulePagoda" type="StaticBody3D" parent="."]
 collision_layer = 1
 collision_mask = 0
@@ -575,6 +590,42 @@ font_size = 32
 
 [node name="ParkBenchHandler" type="Node" parent="Park/ParkBench"]
 script = ExtResource("7_parkbench")
+
+[node name="ParkTree1" parent="Park" instance=ExtResource("11_treelarge")]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, -15, 0, -10)
+
+[node name="ParkTree2" parent="Park" instance=ExtResource("11_treelarge")]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 15, 0, -10)
+
+[node name="ParkTree3" parent="Park" instance=ExtResource("11_treelarge")]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, -15, 0, 10)
+
+[node name="ParkTree4" parent="Park" instance=ExtResource("11_treelarge")]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 15, 0, 10)
+
+[node name="ParkTree5" parent="Park" instance=ExtResource("12_treesmall")]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -18, 0, -2)
+
+[node name="ParkTree6" parent="Park" instance=ExtResource("12_treesmall")]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 18, 0, -2)
+
+[node name="ParkTree7" parent="Park" instance=ExtResource("12_treesmall")]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -8, 0, -14)
+
+[node name="ParkTree8" parent="Park" instance=ExtResource("12_treesmall")]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 8, 0, -14)
+
+[node name="ParkFenceN1" parent="Park" instance=ExtResource("13_fencelarge")]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, -10, 0, -19.5)
+
+[node name="ParkFenceN2" parent="Park" instance=ExtResource("13_fencelarge")]
+transform = Transform3D(4, 0, 0, 0, 4, 0, 0, 0, 4, 10, 0, -19.5)
+
+[node name="ParkFenceW1" parent="Park" instance=ExtResource("13_fencelarge")]
+transform = Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -24.5, 0, -8)
+
+[node name="ParkFenceW2" parent="Park" instance=ExtResource("13_fencelarge")]
+transform = Transform3D(0, 0, 4, 0, 4, 0, -4, 0, 0, -24.5, 0, 8)
 
 [node name="MahaBandulaPark" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 40)
@@ -732,6 +783,24 @@ mesh = SubResource("CylinderMesh_pole")
 [node name="UtilityPole2" type="MeshInstance3D" parent="StreetProps"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 3.75, 20)
 mesh = SubResource("CylinderMesh_pole")
+
+[node name="RoadTree1" parent="StreetProps" instance=ExtResource("11_treelarge")]
+transform = Transform3D(4.5, 0, 0, 0, 4.5, 0, 0, 0, 4.5, 9, 0, -5)
+
+[node name="RoadTree2" parent="StreetProps" instance=ExtResource("11_treelarge")]
+transform = Transform3D(4.5, 0, 0, 0, 4.5, 0, 0, 0, 4.5, 9, 0, -18)
+
+[node name="RoadTree3" parent="StreetProps" instance=ExtResource("11_treelarge")]
+transform = Transform3D(4.5, 0, 0, 0, 4.5, 0, 0, 0, 4.5, -9, 0, -5)
+
+[node name="RoadTree4" parent="StreetProps" instance=ExtResource("11_treelarge")]
+transform = Transform3D(4.5, 0, 0, 0, 4.5, 0, 0, 0, 4.5, -9, 0, -18)
+
+[node name="RoadTree5" parent="StreetProps" instance=ExtResource("12_treesmall")]
+transform = Transform3D(3.8, 0, 0, 0, 3.8, 0, 0, 0, 3.8, 9, 0, 24)
+
+[node name="RoadTree6" parent="StreetProps" instance=ExtResource("12_treesmall")]
+transform = Transform3D(3.8, 0, 0, 0, 3.8, 0, 0, 0, 3.8, -9, 0, 24)
 
 [node name="PedestrianMonk" parent="." instance=ExtResource("9_pedestrian")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0.9, 6)

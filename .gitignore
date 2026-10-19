@@ -9,3 +9,5 @@ export/
 *.crdownload
 .DS_Store
 Thumbs.db
+error/
+assets/new/blender_raw/

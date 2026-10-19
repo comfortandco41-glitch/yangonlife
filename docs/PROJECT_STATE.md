@@ -1,7 +1,7 @@
 # Project State — Yangon Life (ရန်ကုန် ဘဝ)
 
 **Last Updated:** 2026-10-19  
-**Current Milestone:** M0 through M7 — All Milestones Complete, Verified & Production Released (**100% DONE**)  
+**Current Milestone:** Hotfix 0.7.1 — Player Spawn Collision Resolved & 3D City Assets Integrated (**100% DONE**)  
 **Status:** PRODUCTION READY (Desktop Standalone & WebGL2 Browser Distribution)
 
 ---

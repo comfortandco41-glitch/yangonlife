@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/hud_controller.gd" id="1_hud"]
+[ext_resource type="Texture2D" path="res://assets/new/SuperRetroWorld_CharacterPack_Full/SuperRetroWorld_CharacterPack_Full/sprite_split/character_1/character_1_frame32x32.png" id="2_avatar"]
 
 [node name="HUD" type="CanvasLayer"]
 script = ExtResource("1_hud")
@@ -21,6 +22,19 @@ theme_override_constants/margin_bottom = 24
 layout_mode = 2
 size_flags_vertical = 0
 mouse_filter = 2
+theme_override_constants/separation = 12
+
+[node name="AvatarCard" type="PanelContainer" parent="MarginContainer/TopSection"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="PlayerAvatar" type="TextureRect" parent="MarginContainer/TopSection/AvatarCard"]
+custom_minimum_size = Vector2(44, 44)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("2_avatar")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="TopLeft" type="VBoxContainer" parent="MarginContainer/TopSection"]
 layout_mode = 2
