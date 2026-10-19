@@ -1,54 +1,54 @@
 extends Node
-# Global Game Manager and Autoload for Yangon Frontline
+## Global Game Manager for Yangon Life
 
-enum Team {
-	NONE = 0,
-	MILITARY = 1,
-	PDF = 2
-}
+signal game_paused
+signal game_resumed
 
-# Current local player faction preference
-var player_faction: int = Team.PDF
-var is_game_paused: bool = false
+var is_paused: bool = false
 
 func _ready() -> void:
 	_register_input_actions()
 
 func _register_input_actions() -> void:
-	# Ensure all required FPS input actions exist with standard defaults
-	var key_mappings = {
+	var key_map: Dictionary = {
 		"move_forward": [KEY_W, KEY_UP],
 		"move_backward": [KEY_S, KEY_DOWN],
 		"move_left": [KEY_A, KEY_LEFT],
 		"move_right": [KEY_D, KEY_RIGHT],
-		"jump": [KEY_SPACE],
 		"sprint": [KEY_SHIFT],
-		"reload": [KEY_R],
-		"restart_mission": [KEY_F5],
-		"pause": [KEY_ESCAPE]
+		"jump": [KEY_SPACE],
+		"interact": [KEY_E],
+		"inventory": [KEY_I],
+		"map": [KEY_M],
+		"phone": [KEY_P],
+		"pause": [KEY_ESCAPE],
+		"enter_vehicle": [KEY_F],
 	}
-
-	for action_name in key_mappings:
+	for action_name: String in key_map:
 		if not InputMap.has_action(action_name):
 			InputMap.add_action(action_name)
-		for keycode in key_mappings[action_name]:
-			var event = InputEventKey.new()
-			event.physical_keycode = keycode
-			InputMap.action_add_event(action_name, event)
+		for keycode in key_map[action_name]:
+			var ev := InputEventKey.new()
+			ev.physical_keycode = keycode
+			InputMap.action_add_event(action_name, ev)
 
-	# Mouse buttons
-	if not InputMap.has_action("fire"):
-		InputMap.add_action("fire")
-		var fire_ev = InputEventMouseButton.new()
-		fire_ev.button_index = MOUSE_BUTTON_LEFT
-		InputMap.action_add_event("fire", fire_ev)
+	# Mouse buttons for camera
+	if not InputMap.has_action("camera_rotate"):
+		InputMap.add_action("camera_rotate")
+		var ev := InputEventMouseButton.new()
+		ev.button_index = MOUSE_BUTTON_RIGHT
+		InputMap.action_add_event("camera_rotate", ev)
 
-	if not InputMap.has_action("aim_down_sights"):
-		InputMap.add_action("aim_down_sights")
-		var ads_ev = InputEventMouseButton.new()
-		ads_ev.button_index = MOUSE_BUTTON_RIGHT
-		InputMap.action_add_event("aim_down_sights", ads_ev)
+func toggle_pause() -> void:
+	is_paused = not is_paused
+	get_tree().paused = is_paused
+	if is_paused:
+		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+		game_paused.emit()
+	else:
+		game_resumed.emit()
 
-func restart_current_scene() -> void:
+func restart_scene() -> void:
 	get_tree().paused = false
+	is_paused = false
 	get_tree().reload_current_scene()

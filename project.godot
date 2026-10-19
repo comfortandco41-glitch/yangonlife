@@ -1,18 +1,23 @@
 ; Engine configuration file.
-; It's best edited using the editor UI and not directly,
-; but can also be edited by hand.
+; Yangon Life — Open-World Life Simulation
 
 config_version=5
 
 [application]
 
-config/name="Yangon Frontline"
+config/name="Yangon Life"
 run/main_scene="res://scenes/main/main_game.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 
 [autoload]
 
 GameManager="*res://scripts/systems/game_manager.gd"
+EconomyManager="*res://scripts/economy/economy_manager.gd"
+NeedsManager="*res://scripts/simulation/needs_manager.gd"
+TimeManager="*res://scripts/simulation/time_manager.gd"
+SaveManager="*res://scripts/save/save_manager.gd"
+CareerManager="*res://scripts/careers/career_manager.gd"
+InteractionManager="*res://scripts/interaction/interaction_manager.gd"
 
 [display]
 
@@ -30,4 +35,5 @@ renderer/rendering_method.web="gl_compatibility"
 
 3d_physics/layer_1="World"
 3d_physics/layer_2="Characters"
-3d_physics/layer_3="Hitboxes"
+3d_physics/layer_3="Vehicles"
+3d_physics/layer_4="Interactables"

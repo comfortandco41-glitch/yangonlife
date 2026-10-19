@@ -1,0 +1,101 @@
+[gd_scene load_steps=12 format=3 uid="uid://b82d7n2v5w1q6"]
+
+[ext_resource type="Script" path="res://scripts/player/player_controller.gd" id="1_player"]
+[ext_resource type="Script" path="res://scripts/combat/weapon_manager.gd" id="2_weap"]
+[ext_resource type="Script" path="res://scripts/combat/health_component.gd" id="3_health"]
+[ext_resource type="Script" path="res://scripts/combat/hitbox_component.gd" id="4_hitbox"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_body"]
+radius = 0.4
+height = 1.8
+
+[sub_resource type="StandardMaterial3D" id="Mat_GunMetal"]
+albedo_color = Color(0.2, 0.22, 0.24, 1)
+metallic = 0.8
+roughness = 0.4
+
+[sub_resource type="StandardMaterial3D" id="Mat_GunGrip"]
+albedo_color = Color(0.12, 0.12, 0.12, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_receiver"]
+material = SubResource("Mat_GunMetal")
+size = Vector3(0.06, 0.1, 0.45)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_barrel"]
+material = SubResource("Mat_GunMetal")
+top_radius = 0.018
+bottom_radius = 0.018
+height = 0.35
+
+[sub_resource type="BoxMesh" id="BoxMesh_mag"]
+material = SubResource("Mat_GunGrip")
+size = Vector3(0.045, 0.18, 0.08)
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_hitbox"]
+radius = 0.45
+height = 1.8
+
+[node name="Player" type="CharacterBody3D"]
+collision_layer = 2
+collision_mask = 1
+script = ExtResource("1_player")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("CapsuleShape3D_body")
+
+[node name="Head" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
+
+[node name="Camera3D" type="Camera3D" parent="Head"]
+current = true
+fov = 75.0
+
+[node name="WeaponRig" type="Node3D" parent="Head/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.24, -0.22, -0.45)
+
+[node name="WeaponManager" type="Node3D" parent="Head/Camera3D/WeaponRig" node_paths=PackedStringArray("camera", "muzzle_point", "muzzle_light")]
+script = ExtResource("2_weap")
+camera = NodePath("../../Camera3D")
+muzzle_point = NodePath("Muzzle")
+muzzle_light = NodePath("MuzzleLight")
+
+[node name="GunModel" type="Node3D" parent="Head/Camera3D/WeaponRig/WeaponManager"]
+
+[node name="Receiver" type="MeshInstance3D" parent="Head/Camera3D/WeaponRig/WeaponManager/GunModel"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.1)
+mesh = SubResource("BoxMesh_receiver")
+
+[node name="Barrel" type="MeshInstance3D" parent="Head/Camera3D/WeaponRig/WeaponManager/GunModel"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.02, -0.45)
+mesh = SubResource("CylinderMesh_barrel")
+
+[node name="Magazine" type="MeshInstance3D" parent="Head/Camera3D/WeaponRig/WeaponManager/GunModel"]
+transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, -0.1, -0.15)
+mesh = SubResource("BoxMesh_mag")
+
+[node name="Muzzle" type="Node3D" parent="Head/Camera3D/WeaponRig/WeaponManager"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, -0.65)
+
+[node name="MuzzleLight" type="OmniLight3D" parent="Head/Camera3D/WeaponRig/WeaponManager"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, -0.68)
+visible = false
+light_color = Color(1, 0.85, 0.4, 1)
+light_energy = 2.5
+omni_range = 5.0
+
+[node name="HealthComponent" type="Node" parent="."]
+script = ExtResource("3_health")
+team_id = 2
+
+[node name="HitboxComponent" type="Area3D" parent="." node_paths=PackedStringArray("health_component")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("4_hitbox")
+health_component = NodePath("../HealthComponent")
+team_id = 2
+
+[node name="HitboxShape" type="CollisionShape3D" parent="HitboxComponent"]
+shape = SubResource("CapsuleShape3D_hitbox")

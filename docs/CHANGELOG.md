@@ -1,37 +1,88 @@
-# Changelog — Yangon Frontline
+# Changelog — Yangon Life
 
-## [0.1.0] - 2026-10-19 — Milestone M0 & M1 Completion
+All notable changes to this project will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+---
+
+## [0.2.0] - 2026-10-19 — Project Pivot to Yangon Life
+
+### BREAKING CHANGES
+- **Complete Game Direction Pivot:** The project has pivoted from a tactical first-person shooter (*Yangon Frontline*) to an open-world low-poly life simulation (*Yangon Life*).
+- All weapon systems, combat raycasts, military factions (MILITARY vs. PDF), and violent combat mechanics have been permanently discontinued from active development and moved to archival storage.
+
+### Removed
+- **Combat Mechanics:** Removed assault rifles, sidearms, marksman rifles, muzzle flashes, procedural recoil, bullet tracers, and reload systems.
+- **Combat Components:** Decommissioned `HealthComponent`, `HitboxComponent`, and team friendly-fire filtering logic from active scene pipelines.
+- **Hostile AI Systems:** Removed military patrol and attack finite state machines (`AISoldier`).
+- **Shooter HUD:** Removed weapon reticle, ammunition counters, and kill tracking interfaces.
+- **Archive Migration:** All legacy shooter scenes, scripts, and tests have been archived under `archive/fps_prototype/`.
+
 ### Added
-- **Drive D: Hard Isolation Setup:**
+- **Third-Person Character Controller:**
+  - Responsive third-person character rig with smooth WASD movement, sprint multiplier, jumping, and gravity physics.
+  - Orbital third-person camera using `SpringArm3D` with collision-aware raycasting to prevent camera clipping through building walls and urban geometry.
+- **Needs & Simulation System:**
+  - Real-time simulation of vital character needs: `hunger`, `energy`, `hygiene`, and `stress`.
+  - Continuous needs decay over in-game time, driving player engagement with food stalls, rest spots, and baths.
+  - Singleton manager registered: `NeedsManager` (`res://scripts/simulation/needs_manager.gd`).
+- **In-Game Economy System (Myanmar Kyat):**
+  - Authentic currency model using Myanmar Kyat (MMK).
+  - Starting player balance initialized to 50,000 MMK.
+  - Transaction validation logic preventing overdrafts and negative purchase exploits.
+  - Global singleton registered: `EconomyManager` (`res://scripts/economy/economy_manager.gd`).
+- **Career System Framework:**
+  - Career progression framework supporting authentic Yangon professions (shopkeeper, taxi driver, delivery worker, street food vendor).
+  - Shift scheduling, task objectives, performance evaluations, and wage payouts.
+  - Global singleton registered: `CareerManager` (`res://scripts/careers/career_manager.gd`).
+- **Contextual Interaction System:**
+  - Proximity-based interaction detection for street stalls, convenience shops, vehicles, and NPCs.
+  - Action mapping for primary interaction (`E` key) and vehicle entry/exit (`F` key).
+  - Purchase and dialogue modal UI system.
+  - Global singleton registered: `InteractionManager` (`res://scripts/interaction/interaction_manager.gd`).
+- **Downtown Yangon Prototype Map (OpenStreetMap):**
+  - Low-poly urban map slice based on real-world OpenStreetMap GIS data.
+  - Centered on Sule Pagoda roundabout origin `(0, 0, 0)` with metric grid alignment.
+  - Modeled landmarks including Sule Pagoda, Maha Bandula Park, colonial shophouses, and roadside tea stalls with plastic stools.
+- **Save & Load System:**
+  - Versioned JSON serialization storing player coordinates, wallet balance, inventory items, and needs stats.
+  - Compatible with Windows local filesystem and browser storage (`IndexedDB` / `localStorage`).
+  - Automated schema version validation and graceful fallback handling.
+  - Global singleton registered: `SaveManager` (`res://scripts/save/save_manager.gd`).
+- **Life Simulation Documentation Suite:**
+  - Updated architectural diagrams, game design specifications, and roadmap milestones for the life simulation genre.
+  - Created complete multiplayer architecture specification (`docs/MULTIPLAYER.md`).
+  - Created production export and deployment guide (`docs/DEPLOYMENT.md`).
+  - Created 13-category quality assurance testing guide (`docs/TESTING.md`).
+  - Documented Architecture Decision Records ADR-001 through ADR-010 (`docs/DECISIONS.md`).
+
+### Changed
+- **Project Identity:** Renamed project in `project.godot` to `"Yangon Life"`.
+- **Autoload Configuration:** Configured seven core life simulation singletons: `GameManager`, `EconomyManager`, `NeedsManager`, `TimeManager`, `SaveManager`, `CareerManager`, and `InteractionManager`.
+- **Physics Layer Definitions:** Updated layer names: Layer 1: `World`, Layer 2: `Characters`, Layer 3: `Vehicles`, Layer 4: `Interactables`.
+- **Keybindings:** Added dedicated bindings for `inventory` (I), `map` (M), `phone` (P), and `enter_vehicle` (F).
+
+---
+
+## [0.1.0] - 2026-10-19 — Original FPS Prototype (Archived)
+
+> [!NOTE]
+> All systems and features below represent the initial tactical first-person shooter milestone (*Yangon Frontline*). These assets have been archived to `archive/fps_prototype/` and are no longer active in the main project.
+
+### Added
+- **Drive D: Hard Storage Isolation:**
   - Configured Godot Engine 4.7.2 in self-contained mode (`_sc_`) at `D:\Tools\Godot`.
   - Installed official export templates (Windows, Web, Linux, Android) into `D:\Tools\Godot\editor_data\export_templates\4.7.2.stable\`.
-  - Ensured zero tool overhead and zero downloads on Drive C:.
-- **Documentation Suite:**
-  - `AGENTS.md` (Agent instructions, technical stack, Drive D: storage rules).
-  - `README.md` (Game overview, controls, run instructions).
-  - `docs/GDD.md` (Vision, opposing factions: MILITARY vs PDF, weapon specs, gameplay loop).
-  - `docs/ARCHITECTURE.md` (Scene structure, decoupled components, raycast combat pipeline, web considerations).
-  - `docs/PROJECT_STATE.md` (Source of truth and milestone tracking).
-  - `docs/ROADMAP.md` (Milestones M0 through M7 with granular acceptance criteria).
-  - `docs/TASKS.md` (Task backlog with statuses and verification results).
-  - `docs/DECISIONS.md` (ADR-001 through ADR-004: Engine, Renderer, Storage, Component Architecture).
-  - `docs/LEVEL_DESIGN.md` (Downtown Yangon arena specifications, cover props, bus).
-  - `docs/ART_BIBLE.md` (Low-poly aesthetics, color palettes, faction uniforms, asset standards).
-  - `docs/AI_SYSTEMS.md` (State machine: IDLE, PATROL, CHASE, ATTACK, DEAD; perception cone).
-  - `docs/CONTROLS_AND_UI.md` (Controls, browser pointer capture, HUD wireframes).
-  - `docs/MULTIPLAYER.md` (Authoritative server architecture, WebSocket transport, state sync).
-  - `docs/DEPLOYMENT.md` (Desktop & WebGL export commands, Nginx / Node.js web server headers).
-  - `docs/TESTING.md` (Automated headless tests and verification checklist).
-  - `docs/CHANGELOG.md` (Release tracking).
-- **Core Gameplay Systems (M1):**
-  - `PlayerController` (`scenes/player/player.tscn`): WASD movement, sprint, jump, gravity, ground collision, mouse-look pitch/yaw, ADS camera zoom, procedural weapon sway and bob.
-  - `WeaponManager` (`scenes/weapons/rifle_m1.tscn`): MA-1 Vanguard assault rifle with raycast hit resolution, magazine tracking (30/90), reload timing, procedural kickback recoil, muzzle flash, bullet tracer.
-  - `HealthComponent` & `HitboxComponent` (`scripts/combat/`): Decoupled damage calculation, friendly-fire filtering, health clamping, death signals.
-  - `AISoldier` (`scenes/characters/ai_soldier.tscn`): Hostile military AI with FSM (`IDLE`, `PATROL`, `CHASE`, `ATTACK`, `DEAD`), 90° FOV sight cone raycast check, burst rifle fire, collapse on death.
-  - `YangonArena` (`scenes/environment/yangon_arena.tscn`): 60m x 28m downtown Yangon urban arena with asphalt road, road markings, raised curbs, sidewalks, colonial facades, red city transit bus cover, Jersey barricades, sandbag bunkers, and perimeter walls.
-  - `HUD` (`scenes/ui/hud.tscn`): Crosshair, real-time health bar and counter, ammo counter and reload warning, PDF faction badge, objective tracking, directional damage flash, victory and defeat dialogs, mission restart flow (`F5` / button).
-  - `MissionClearSector` (`scenes/main/main_game.tscn`): Mission coordinator handling spawning, player tracking, enemy defeat count, victory/defeat triggers, and restart.
+- **FPS Core Gameplay Prototype (M1):**
+  - First-person player controller with WASD movement, sprint, jump, mouse-look pitch/yaw, and ADS zoom.
+  - Raycast assault rifle (MA-1 Vanguard) with ammo counter, recoil kickback, reload timing, and bullet tracer visual effect.
+  - Decoupled `HealthComponent` and `HitboxComponent` with friendly-fire filtering.
+  - Hostile `AISoldier` with finite state machine (`IDLE`, `PATROL`, `CHASE`, `ATTACK`, `DEAD`) and 90° FOV sight cone.
+  - Downtown Yangon prototype arena with asphalt road, barricades, red transit bus, and sandbag bunkers.
+  - In-game HUD with crosshair, health gauge, ammo tracker, damage flash, and victory/defeat restart flow.
 - **Verification & Builds:**
-  - Automated headless test suite (`tests/run_tests.gd`): 39 unit/integration assertions passing headlessly with exit code 0.
-  - Web export (`build/web/index.html`): WebGL2/WASM build successfully exported and served with Node.js test server (`server/serve_web.js`) with COOP/COEP headers.
-  - Desktop export (`build/desktop/YangonFrontline.exe`): Standalone 64-bit Windows executable generated and verified.
+  - Automated headless test suite with 39 assertions passing headlessly.
+  - Initial Windows desktop executable (`build/desktop/YangonFrontline.exe`).
+  - Initial WebGL2 browser export (`build/web/index.html`) served via `serve_web.js` with COOP/COEP headers.

@@ -1,100 +1,154 @@
-class_name HUDController
-extends Control
+extends CanvasLayer
+## HUD Controller — displays money, time, needs, and interaction prompts
 
-signal restart_requested
-
-@onready var health_label: Label = $Margin/BottomLeft/HBox/HealthLabel
-@onready var health_bar: ProgressBar = $Margin/BottomLeft/HealthBar
-@onready var ammo_label: Label = $Margin/BottomRight/AmmoLabel
-@onready var reload_prompt: Label = $Margin/BottomRight/ReloadPrompt
-@onready var objective_label: Label = $Margin/TopCenter/ObjectiveLabel
-@onready var faction_label: Label = $Margin/TopLeft/FactionLabel
-@onready var damage_flash: ColorRect = $DamageFlash
-@onready var victory_panel: Panel = $VictoryPanel
-@onready var defeat_panel: Panel = $DefeatPanel
-@onready var start_overlay: Panel = $StartOverlay
-
-var flash_tween: Tween
+@onready var day_label: Label = %DayLabel if has_node("%DayLabel") else find_child("DayLabel", true, false)
+@onready var time_label: Label = %TimeLabel if has_node("%TimeLabel") else find_child("TimeLabel", true, false)
+@onready var money_label: Label = %MoneyLabel if has_node("%MoneyLabel") else find_child("MoneyLabel", true, false)
+@onready var hunger_bar: ProgressBar = %HungerBar if has_node("%HungerBar") else find_child("HungerBar", true, false)
+@onready var energy_bar: ProgressBar = %EnergyBar if has_node("%EnergyBar") else find_child("EnergyBar", true, false)
+@onready var hygiene_bar: ProgressBar = %HygieneBar if has_node("%HygieneBar") else find_child("HygieneBar", true, false)
+@onready var stress_bar: ProgressBar = %StressBar if has_node("%StressBar") else find_child("StressBar", true, false)
+@onready var interaction_prompt: Label = %InteractionPrompt if has_node("%InteractionPrompt") else find_child("InteractionPrompt", true, false)
 
 func _ready() -> void:
-	if victory_panel:
-		victory_panel.visible = false
-	if defeat_panel:
-		defeat_panel.visible = false
-	if reload_prompt:
-		reload_prompt.visible = false
-	if damage_flash:
-		damage_flash.modulate.a = 0.0
+	# Connect to EconomyManager
+	if has_node("/root/EconomyManager"):
+		var em: Node = get_node("/root/EconomyManager")
+		if em.has_signal("money_changed"):
+			em.money_changed.connect(_on_money_changed)
+		if em.has_method("get_balance"):
+			update_money(em.get_balance())
+		elif "balance" in em:
+			update_money(em.balance)
 
-	# Browser / Initial Start Overlay
-	if start_overlay:
-		start_overlay.visible = OS.has_feature("web")
+	# Connect to NeedsManager
+	if has_node("/root/NeedsManager"):
+		var nm: Node = get_node("/root/NeedsManager")
+		if nm.has_signal("need_changed"):
+			nm.need_changed.connect(_on_need_changed)
+		if "hunger" in nm:
+			_update_need("hunger", nm.hunger)
+		if "energy" in nm:
+			_update_need("energy", nm.energy)
+		if "hygiene" in nm:
+			_update_need("hygiene", nm.hygiene)
+		if "stress" in nm:
+			_update_need("stress", nm.stress)
 
-	# Connect restart buttons
-	if victory_panel and victory_panel.has_node("VBox/RestartBtn"):
-		victory_panel.get_node("VBox/RestartBtn").pressed.connect(_on_restart_pressed)
-	if defeat_panel and defeat_panel.has_node("VBox/RestartBtn"):
-		defeat_panel.get_node("VBox/RestartBtn").pressed.connect(_on_restart_pressed)
-	if start_overlay and start_overlay.has_node("Button"):
-		start_overlay.get_node("Button").pressed.connect(_on_start_clicked)
+	# Connect to TimeManager
+	if has_node("/root/TimeManager"):
+		var tm: Node = get_node("/root/TimeManager")
+		if tm.has_signal("time_tick"):
+			tm.time_tick.connect(_on_time_tick)
+		if tm.has_signal("day_changed"):
+			tm.day_changed.connect(_on_day_changed)
+		_refresh_time_display()
 
-func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("restart_mission"):
-		_on_restart_pressed()
+	# Connect to InteractionManager
+	if has_node("/root/InteractionManager"):
+		var im: Node = get_node("/root/InteractionManager")
+		if im.has_signal("interactable_entered"):
+			im.interactable_entered.connect(_on_interactable_entered)
+		if im.has_signal("interactable_exited"):
+			im.interactable_exited.connect(_on_interactable_exited)
 
-func update_health(current: float, max_h: float) -> void:
-	if health_label:
-		health_label.text = "HP: %d / %d" % [int(current), int(max_h)]
-	if health_bar:
-		health_bar.max_value = max_h
-		health_bar.value = current
+	# Initial prompt state
+	if interaction_prompt:
+		interaction_prompt.text = ""
+		interaction_prompt.visible = false
 
-func update_ammo(current: int, reserve: int) -> void:
-	if ammo_label:
-		ammo_label.text = "AMMO: %d / %d" % [current, reserve]
-	if reload_prompt:
-		reload_prompt.visible = (current == 0 and reserve > 0)
+func _on_money_changed(new_balance: int) -> void:
+	update_money(new_balance)
 
-func update_objective(remaining_enemies: int, total_enemies: int) -> void:
-	if objective_label:
-		if remaining_enemies > 0:
-			objective_label.text = "OBJECTIVE: Clear Downtown Sector (Hostiles: %d / %d)" % [remaining_enemies, total_enemies]
-		else:
-			objective_label.text = "OBJECTIVE: Sector Cleared! Mission Complete."
-
-func set_faction(team_name: String) -> void:
-	if faction_label:
-		faction_label.text = "FACTION: %s" % team_name
-
-func trigger_damage_flash() -> void:
-	if not damage_flash:
+func update_money(amount: int) -> void:
+	if not money_label:
 		return
-	if flash_tween and flash_tween.is_valid():
-		flash_tween.kill()
+	money_label.text = _format_money(amount)
 
-	damage_flash.modulate.a = 0.45
-	flash_tween = create_tween()
-	flash_tween.tween_property(damage_flash, "modulate:a", 0.0, 0.4)
+func _format_money(amount: int) -> String:
+	var is_negative: bool = amount < 0
+	var abs_amount: int = abs(amount)
+	var s: String = str(abs_amount)
+	var formatted: String = ""
+	var count: int = 0
+	for i in range(s.length() - 1, -1, -1):
+		if count > 0 and count % 3 == 0:
+			formatted = "," + formatted
+		formatted = s[i] + formatted
+		count += 1
+	if is_negative:
+		return "-K " + formatted
+	return "K " + formatted
 
-func show_victory() -> void:
-	if victory_panel:
-		victory_panel.visible = true
-	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+func _on_need_changed(need_name: String, value: float) -> void:
+	_update_need(need_name, value)
 
-func show_defeat() -> void:
-	if defeat_panel:
-		defeat_panel.visible = true
-	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+func _update_need(need_name: String, value: float) -> void:
+	match need_name:
+		"hunger":
+			if hunger_bar:
+				hunger_bar.value = clampf(value, 0.0, 100.0)
+		"energy":
+			if energy_bar:
+				energy_bar.value = clampf(value, 0.0, 100.0)
+		"hygiene":
+			if hygiene_bar:
+				hygiene_bar.value = clampf(value, 0.0, 100.0)
+		"stress":
+			if stress_bar:
+				# Stress bar shows inverted: lower stress = fuller bar (100 - stress)
+				stress_bar.value = clampf(100.0 - value, 0.0, 100.0)
 
-func _on_restart_pressed() -> void:
-	restart_requested.emit()
-	var gm = get_node_or_null("/root/GameManager")
-	if gm and gm.has_method("restart_current_scene"):
-		gm.restart_current_scene()
-	elif get_tree():
-		get_tree().reload_current_scene()
+func _on_time_tick(_hour: Variant = null, _minute: Variant = null) -> void:
+	_refresh_time_display()
 
-func _on_start_clicked() -> void:
-	if start_overlay:
-		start_overlay.visible = false
-	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+func _on_day_changed(day: int) -> void:
+	update_day(day)
+
+func _refresh_time_display() -> void:
+	if not has_node("/root/TimeManager"):
+		return
+	var tm: Node = get_node("/root/TimeManager")
+	if tm.has_method("get_time_string"):
+		update_time(tm.get_time_string())
+	elif "game_hour" in tm and "game_minute" in tm:
+		update_time("%02d:%02d" % [tm.game_hour, tm.game_minute])
+
+	var current_day: int = 1
+	if "game_day" in tm:
+		current_day = tm.game_day
+	elif "day" in tm:
+		current_day = tm.day
+	update_day(current_day)
+
+func update_time(time_str: String) -> void:
+	if time_label:
+		time_label.text = time_str
+
+func update_day(day_num: int) -> void:
+	if day_label:
+		day_label.text = "Day %d" % day_num
+
+func _on_interactable_entered(arg1: Variant = null, arg2: Variant = null) -> void:
+	var prompt_str: String = "Interact"
+	if arg2 is String and arg2 != "":
+		prompt_str = arg2
+	elif arg1 is String and arg1 != "":
+		prompt_str = arg1
+	elif arg1 != null and "interaction_prompt" in arg1 and str(arg1.interaction_prompt) != "":
+		prompt_str = str(arg1.interaction_prompt)
+
+	show_interaction_prompt(prompt_str)
+
+func _on_interactable_exited() -> void:
+	hide_interaction_prompt()
+
+func show_interaction_prompt(prompt: String) -> void:
+	if interaction_prompt:
+		interaction_prompt.text = "[E] " + prompt
+		interaction_prompt.visible = true
+
+func hide_interaction_prompt() -> void:
+	if interaction_prompt:
+		interaction_prompt.text = ""
+		interaction_prompt.visible = false

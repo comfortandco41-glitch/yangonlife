@@ -44,5 +44,5 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT, '127.0.0.1', () => {
-	console.log(`[Yangon Frontline Web Server] Serving http://127.0.0.1:${PORT}`);
+	console.log(`[Yangon Life Web Server] Serving http://127.0.0.1:${PORT}`);
 });
