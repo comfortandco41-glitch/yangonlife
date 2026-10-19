@@ -1,0 +1,536 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/phone_controller.gd" id="1_phone"]
+
+[node name="PhoneMenu" type="Control"]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_phone")
+
+[node name="PhoneFrame" type="PanelContainer" parent="."]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(360, 640)
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -392.0
+offset_top = -320.0
+offset_right = -32.0
+offset_bottom = 320.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="PhoneFrame"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="StatusBar" type="HBoxContainer" parent="PhoneFrame/VBox"]
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="CarrierLabel" type="Label" parent="PhoneFrame/VBox/StatusBar"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.65, 0.75, 0.85, 1)
+theme_override_font_sizes/font_size = 11
+text = "MPT 4G"
+
+[node name="Spacer" type="Control" parent="PhoneFrame/VBox/StatusBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="StatusBarTime" type="Label" parent="PhoneFrame/VBox/StatusBar"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 12
+text = "08:00"
+
+[node name="Spacer2" type="Control" parent="PhoneFrame/VBox/StatusBar"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="BatteryLabel" type="Label" parent="PhoneFrame/VBox/StatusBar"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 0.9, 0.4, 1)
+theme_override_font_sizes/font_size = 11
+text = "88% 🔋"
+
+[node name="HSeparator" type="HSeparator" parent="PhoneFrame/VBox"]
+layout_mode = 2
+
+[node name="ScreenArea" type="Control" parent="PhoneFrame/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="HomeScreen" type="VBoxContainer" parent="PhoneFrame/VBox/ScreenArea"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 12
+
+[node name="ClockCard" type="VBoxContainer" parent="PhoneFrame/VBox/ScreenArea/HomeScreen"]
+layout_mode = 2
+alignment = 1
+
+[node name="HomeClock" type="Label" parent="PhoneFrame/VBox/ScreenArea/HomeScreen/ClockCard"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 38
+text = "08:00"
+horizontal_alignment = 1
+
+[node name="HomeDate" type="Label" parent="PhoneFrame/VBox/ScreenArea/HomeScreen/ClockCard"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.75, 0.3, 1)
+theme_override_font_sizes/font_size = 14
+text = "Day 1 (ရန်ကုန်)"
+horizontal_alignment = 1
+
+[node name="GreetingLabel" type="Label" parent="PhoneFrame/VBox/ScreenArea/HomeScreen/ClockCard"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.8, 0.9, 1)
+theme_override_font_sizes/font_size = 13
+text = "Mingalaba (မင်္ဂလာပါ)"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="PhoneFrame/VBox/ScreenArea/HomeScreen"]
+layout_mode = 2
+
+[node name="AppLauncherGrid" type="GridContainer" parent="PhoneFrame/VBox/ScreenArea/HomeScreen"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 12
+columns = 2
+
+[node name="BtnLaunchBank" type="Button" parent="PhoneFrame/VBox/ScreenArea/HomeScreen/AppLauncherGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 90)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "💳 KBZPay
+Mobile Banking"
+
+[node name="BtnLaunchJobs" type="Button" parent="PhoneFrame/VBox/ScreenArea/HomeScreen/AppLauncherGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 90)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "💼 Jobs App
+Careers & Shifts"
+
+[node name="BtnLaunchMap" type="Button" parent="PhoneFrame/VBox/ScreenArea/HomeScreen/AppLauncherGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 90)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "📍 GPS Map
+Downtown POIs"
+
+[node name="BtnLaunchStatus" type="Button" parent="PhoneFrame/VBox/ScreenArea/HomeScreen/AppLauncherGrid"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 90)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "👤 Life Status
+Needs & Skills"
+
+[node name="BankApp" type="VBoxContainer" parent="PhoneFrame/VBox/ScreenArea"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 10
+
+[node name="BankHeader" type="Label" parent="PhoneFrame/VBox/ScreenArea/BankApp"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.6, 1, 1)
+theme_override_font_sizes/font_size = 18
+text = "KBZPay / WavePay Mobile"
+horizontal_alignment = 1
+
+[node name="BalanceCard" type="PanelContainer" parent="PhoneFrame/VBox/ScreenArea/BankApp"]
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="PhoneFrame/VBox/ScreenArea/BankApp/BalanceCard"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="BalTitle" type="Label" parent="PhoneFrame/VBox/ScreenArea/BankApp/BalanceCard/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+theme_override_font_sizes/font_size = 12
+text = "Current MMK Wallet Balance:"
+
+[node name="BankBalanceLabel" type="Label" parent="PhoneFrame/VBox/ScreenArea/BankApp/BalanceCard/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
+theme_override_font_sizes/font_size = 22
+text = "K 50,000 MMK"
+
+[node name="QuickActionRow" type="HBoxContainer" parent="PhoneFrame/VBox/ScreenArea/BankApp"]
+layout_mode = 2
+
+[node name="BtnPayRent" type="Button" parent="PhoneFrame/VBox/ScreenArea/BankApp/QuickActionRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Pay Rent (15,000 MMK)"
+
+[node name="BankStatusToast" type="Label" parent="PhoneFrame/VBox/ScreenArea/BankApp"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.8, 0.3, 1)
+theme_override_font_sizes/font_size = 12
+text = "Rent Paid Successfully!"
+horizontal_alignment = 1
+
+[node name="LedgerHeader" type="Label" parent="PhoneFrame/VBox/ScreenArea/BankApp"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_font_sizes/font_size = 13
+text = "Recent Transactions Ledger:"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="PhoneFrame/VBox/ScreenArea/BankApp"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="BankLedgerContainer" type="VBoxContainer" parent="PhoneFrame/VBox/ScreenArea/BankApp/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="JobsApp" type="VBoxContainer" parent="PhoneFrame/VBox/ScreenArea"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 8
+
+[node name="JobsHeader" type="Label" parent="PhoneFrame/VBox/ScreenArea/JobsApp"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.7, 0.2, 1)
+theme_override_font_sizes/font_size = 18
+text = "Yangon Careers & Employment"
+horizontal_alignment = 1
+
+[node name="CurrentJobCard" type="PanelContainer" parent="PhoneFrame/VBox/ScreenArea/JobsApp"]
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="PhoneFrame/VBox/ScreenArea/JobsApp/CurrentJobCard"]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="JobStatusLabel" type="Label" parent="PhoneFrame/VBox/ScreenArea/JobsApp/CurrentJobCard/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "Role: Unemployed"
+
+[node name="ShiftInfoLabel" type="Label" parent="PhoneFrame/VBox/ScreenArea/JobsApp/CurrentJobCard/VBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_font_sizes/font_size = 12
+text = "Shift Duration: 8 Hours (480 mins)"
+
+[node name="JobActionRow" type="HBoxContainer" parent="PhoneFrame/VBox/ScreenArea/JobsApp"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="StartShiftButton" type="Button" parent="PhoneFrame/VBox/ScreenArea/JobsApp/JobActionRow"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Start Work Shift"
+
+[node name="ResignJobButton" type="Button" parent="PhoneFrame/VBox/ScreenArea/JobsApp/JobActionRow"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+text = "Resign"
+
+[node name="JobToastLabel" type="Label" parent="PhoneFrame/VBox/ScreenArea/JobsApp"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.8, 0.3, 1)
+theme_override_font_sizes/font_size = 12
+text = "Shift started!"
+horizontal_alignment = 1
+
+[node name="AvailableJobsTitle" type="Label" parent="PhoneFrame/VBox/ScreenArea/JobsApp"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_font_sizes/font_size = 13
+text = "Vacant Downtown Positions:"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="PhoneFrame/VBox/ScreenArea/JobsApp"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="JobsListContainer" type="VBoxContainer" parent="PhoneFrame/VBox/ScreenArea/JobsApp/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="MapApp" type="VBoxContainer" parent="PhoneFrame/VBox/ScreenArea"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 8
+
+[node name="MapHeader" type="Label" parent="PhoneFrame/VBox/ScreenArea/MapApp"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.3, 0.9, 0.5, 1)
+theme_override_font_sizes/font_size = 18
+text = "Downtown Yangon GPS"
+horizontal_alignment = 1
+
+[node name="SubHeader" type="Label" parent="PhoneFrame/VBox/ScreenArea/MapApp"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.7, 0.7, 1)
+theme_override_font_sizes/font_size = 12
+text = "Points of Interest & Distance from Player:"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="PhoneFrame/VBox/ScreenArea/MapApp"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PoiListContainer" type="VBoxContainer" parent="PhoneFrame/VBox/ScreenArea/MapApp/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="StatusApp" type="VBoxContainer" parent="PhoneFrame/VBox/ScreenArea"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 8
+
+[node name="StatusHeader" type="Label" parent="PhoneFrame/VBox/ScreenArea/StatusApp"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.7, 0.4, 1, 1)
+theme_override_font_sizes/font_size = 18
+text = "Life Status & Capabilities"
+horizontal_alignment = 1
+
+[node name="NeedsCard" type="PanelContainer" parent="PhoneFrame/VBox/ScreenArea/StatusApp"]
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="PhoneFrame/VBox/ScreenArea/StatusApp/NeedsCard"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="HungerRow" type="HBoxContainer" parent="PhoneFrame/VBox/ScreenArea/StatusApp/NeedsCard/VBox"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PhoneFrame/VBox/ScreenArea/StatusApp/NeedsCard/VBox/HungerRow"]
+custom_minimum_size = Vector2(70, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Hunger"
+
+[node name="HungerMeter" type="ProgressBar" parent="PhoneFrame/VBox/ScreenArea/StatusApp/NeedsCard/VBox/HungerRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 14)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+show_percentage = false
+
+[node name="HungerValLabel" type="Label" parent="PhoneFrame/VBox/ScreenArea/StatusApp/NeedsCard/VBox/HungerRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "80%"
+horizontal_alignment = 2
+
+[node name="EnergyRow" type="HBoxContainer" parent="PhoneFrame/VBox/ScreenArea/StatusApp/NeedsCard/VBox"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PhoneFrame/VBox/ScreenArea/StatusApp/NeedsCard/VBox/EnergyRow"]
+custom_minimum_size = Vector2(70, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Energy"
+
+[node name="EnergyMeter" type="ProgressBar" parent="PhoneFrame/VBox/ScreenArea/StatusApp/NeedsCard/VBox/EnergyRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 14)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+show_percentage = false
+
+[node name="EnergyValLabel" type="Label" parent="PhoneFrame/VBox/ScreenArea/StatusApp/NeedsCard/VBox/EnergyRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "100%"
+horizontal_alignment = 2
+
+[node name="HygieneRow" type="HBoxContainer" parent="PhoneFrame/VBox/ScreenArea/StatusApp/NeedsCard/VBox"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PhoneFrame/VBox/ScreenArea/StatusApp/NeedsCard/VBox/HygieneRow"]
+custom_minimum_size = Vector2(70, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Hygiene"
+
+[node name="HygieneMeter" type="ProgressBar" parent="PhoneFrame/VBox/ScreenArea/StatusApp/NeedsCard/VBox/HygieneRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 14)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+show_percentage = false
+
+[node name="HygieneValLabel" type="Label" parent="PhoneFrame/VBox/ScreenArea/StatusApp/NeedsCard/VBox/HygieneRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "90%"
+horizontal_alignment = 2
+
+[node name="StressRow" type="HBoxContainer" parent="PhoneFrame/VBox/ScreenArea/StatusApp/NeedsCard/VBox"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="PhoneFrame/VBox/ScreenArea/StatusApp/NeedsCard/VBox/StressRow"]
+custom_minimum_size = Vector2(70, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Calm (Stress)"
+
+[node name="StressMeter" type="ProgressBar" parent="PhoneFrame/VBox/ScreenArea/StatusApp/NeedsCard/VBox/StressRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 14)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+show_percentage = false
+
+[node name="StressValLabel" type="Label" parent="PhoneFrame/VBox/ScreenArea/StatusApp/NeedsCard/VBox/StressRow"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "10%"
+horizontal_alignment = 2
+
+[node name="EfficiencyLabel" type="Label" parent="PhoneFrame/VBox/ScreenArea/StatusApp"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.9, 0.4, 1)
+theme_override_font_sizes/font_size = 13
+text = "Work Efficiency: 100%"
+horizontal_alignment = 1
+
+[node name="SkillsTitle" type="Label" parent="PhoneFrame/VBox/ScreenArea/StatusApp"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_font_sizes/font_size = 13
+text = "Acquired Skills & Certifications:"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="PhoneFrame/VBox/ScreenArea/StatusApp"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SkillsListContainer" type="VBoxContainer" parent="PhoneFrame/VBox/ScreenArea/StatusApp/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+
+[node name="PhoneDock" type="HBoxContainer" parent="PhoneFrame/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="DockBank" type="Button" parent="PhoneFrame/VBox/PhoneDock"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "💳 Bank"
+
+[node name="DockJobs" type="Button" parent="PhoneFrame/VBox/PhoneDock"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "💼 Jobs"
+
+[node name="DockMap" type="Button" parent="PhoneFrame/VBox/PhoneDock"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "📍 Map"
+
+[node name="DockStatus" type="Button" parent="PhoneFrame/VBox/PhoneDock"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "👤 Status"
+
+[node name="NavigationBar" type="HBoxContainer" parent="PhoneFrame/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="NavBack" type="Button" parent="PhoneFrame/VBox/NavigationBar"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(60, 30)
+layout_mode = 2
+text = "◀ Back"
+
+[node name="NavHome" type="Button" parent="PhoneFrame/VBox/NavigationBar"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(60, 30)
+layout_mode = 2
+text = "● Home"
+
+[node name="NavClose" type="Button" parent="PhoneFrame/VBox/NavigationBar"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(60, 30)
+layout_mode = 2
+text = "✕ Close"

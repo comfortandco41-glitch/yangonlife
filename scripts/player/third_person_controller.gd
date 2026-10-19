@@ -22,6 +22,7 @@ const PITCH_MAX: float = deg_to_rad(60.0)
 @onready var camera: Camera3D = $CameraYaw/SpringArm3D/Camera3D
 
 var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity", 9.8)
+var _footstep_distance: float = 0.0
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -92,9 +93,17 @@ func _physics_process(delta: float) -> void:
 	if direction != Vector3.ZERO:
 		velocity.x = direction.x * current_speed
 		velocity.z = direction.z * current_speed
+		if is_on_floor():
+			_footstep_distance += current_speed * delta
+			if _footstep_distance >= 2.0:
+				_footstep_distance = 0.0
+				var am: Node = get_node_or_null("/root/AudioManager")
+				if am and am.has_method("play_footstep"):
+					am.call("play_footstep")
 	else:
 		velocity.x = move_toward(velocity.x, 0.0, current_speed)
 		velocity.z = move_toward(velocity.z, 0.0, current_speed)
+		_footstep_distance = 0.0
 
 	move_and_slide()
 

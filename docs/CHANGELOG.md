@@ -7,6 +7,69 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.7.0] - 2026-10-19 — Production Release: Milestones M2–M7 Complete
+
+### Added
+- **Milestone M2 (City Map Expansion & Driveable Vehicles):**
+  - `VehicleController` (`scripts/vehicles/vehicle_controller.gd`): Reusable CharacterBody3D driving physics, steering, acceleration, braking, fuel consumption, taxi meter, and save/load persistence.
+  - Iconic yellow-top Yangon taxi sedan (`scenes/vehicles/taxi_sedan.tscn`) and courier delivery bicycle (`scenes/vehicles/delivery_bicycle.tscn`).
+  - `JigsawRouteRunner` (`scripts/careers/jigsaw_route_runner.gd`): 4-stop arterial transit loop.
+  - Golden octagonal Sule Pagoda stupa, neoclassical City Hall, Independence Monument obelisk, and refuel gas pump.
+- **Milestone M3 (Complete Career Loops, Skills & Housing):**
+  - `SkillManager` (`scripts/skills/skill_manager.gd`): 5 skills (driving, cooking, customer service, business, mechanic) with 1–5 level thresholds and vocational perks.
+  - `InventoryManager` (`scripts/inventory/inventory_manager.gd`): 16-slot grid backpack with authentic consumable catalog (Mohinga, Shan Noodles, Laphet Yay, Sparks, Herbal Balm, Thanaka, Kun-ya) and needs effects.
+  - `HousingManager` (`scripts/housing/housing_manager.gd`): 5 housing tiers (Park Bench to Heritage Shophouse), rent schedules, rest restoration, and eviction safety net.
+  - Career shift runners: `DeliveryRunner`, `StreetVendorRunner`, `TaxiShiftRunner`.
+- **Milestone M4 (Living City NPCs, Traffic & Weather):**
+  - Schedule-driven ambient pedestrians (`NPCPedestrian`) with 3-tier distance LOD (Full 3D -> Waypoint math -> Offscreen timetable) and Burmese dialogue.
+  - Automated road traffic (`TrafficCar` YBS red bus) with forward obstacle RayCast3D and tire traction modulation.
+  - Celestial day/night lighting cycle and `CPUParticles3D` monsoon rain weather controller.
+- **Milestone M5 (Full UI Suite & Phone Apps):**
+  - Burmese smartphone personal organizer (`P` key): KBZPay Banking, Jobs board, GPS Map POIs, Life Status apps.
+  - 16-slot grid backpack inventory (`I` key) with item detail cards and consumption button.
+  - Browser start screen with WebAudio unlock and mouse pointer capture.
+  - Pause menu (`Escape`) with Save/Load and audio/sensitivity settings.
+- **Milestone M6 (WebSocket Multiplayer Prototype):**
+  - Client-server architecture with `WebSocketMultiplayerPeer` (port 8910, 20 Hz tick rate).
+  - Server-authoritative economy: Zero client trust for MMK balance, purchases, and wage deposits.
+  - `RemotePlayer` multiplayer puppet entity with cubic Hermite transform interpolation and billboard nameplate.
+  - Dedicated headless server scene (`server/server.tscn` & `server/server_main.gd`).
+- **Milestone M7 (Polish, Audio, Performance & Production Release):**
+  - `AudioManager` (`scripts/systems/audio_manager.gd`): Zero-dependency procedural 16-bit PCM sound synthesis for WebGL2 and Desktop (UI clicks, MMK coin chimes, footsteps, ambient city murmur, and rain hiss).
+  - Street aesthetics: roadside plastic tea shop stools (red & blue), YBS bus stop shelter with bench and signage, roadside utility poles.
+  - Performance optimization for WebGL2: 59 draw meshes (<150 limit), 28 physics bodies (<100 limit), lightweight vertex-lit shaders.
+  - Comprehensive master test suite (`tests/run_tests.gd`) with 406/406 tests passing (797 tests across all suites).
+  - Production standalone Windows executable (`YangonLife.exe` 109MB) and optimized WebGL2 distribution (`build/web/` 39.5MB wasm).
+
+---
+
+## [0.5.0] - 2026-10-19 — Milestone M5: Full UI Suite, Phone Apps & Web Play Readiness
+
+### Added
+- **Smartphone Personal Organizer (`scripts/ui/phone_controller.gd` & `scenes/ui/phone_menu.tscn`):**
+  - Burmese Android smartphone interface toggled with `P` or closed via `Escape`.
+  - **KBZPay / WavePay Banking App:** Real-time MMK balance, transaction ledger (income/expense logging), and quick "Pay Rent" action.
+  - **Jobs App:** Displays current role, shift status (8-hr / 480 mins), available downtown job openings, "Start Shift", and resignation actions.
+  - **GPS Map App:** Live dynamic distance calculation in meters from player to 5 downtown POIs (Sule Pagoda, Maha Bandula Park, Chinatown 19th St, Yangon City Hall, Botahtaung Pagoda).
+  - **Status App:** Visual gauges for Hunger, Energy, Hygiene, Stress, overall work efficiency rating, and acquired vocational skills.
+  - 3-button navigation bar (Back, Home, Close) and quick dock launcher.
+- **Grid Backpack Inventory (`scripts/ui/inventory_menu_controller.gd` & `scenes/ui/inventory_menu.tscn`):**
+  - 16-slot grid (4x4) displaying item names, quantity badges, and category pills (`FOOD`, `DRINK`, `MISC`).
+  - Item detail card with descriptions and stat effects.
+  - "Use / Eat / Drink" consumption action integrating directly with `InventoryManager` and `NeedsManager`. Toggled with `I` or `Escape`.
+- **Browser Click-to-Play Overlay (`scripts/ui/start_screen_controller.gd` & `scenes/ui/start_screen.tscn`):**
+  - Full-screen CanvasLayer overlay (layer 50) with Burmese-English title and control instruction card.
+  - Click-to-start action locking mouse pointer (`Input.MOUSE_MODE_CAPTURED`) and unlocking WebAudio context for browser compatibility.
+- **Pause Menu & Settings Overlay (`scripts/ui/pause_menu_controller.gd` & `scenes/ui/pause_menu.tscn`):**
+  - Pause overlay running in `PROCESS_MODE_ALWAYS`, toggled with `Escape`.
+  - Resume Game, Save Game (calls `SaveManager.save_game()` with toast), Load Game (calls `SaveManager.load_game()` with toast), Restart Day.
+  - Master Volume slider (0% to 100%) attenuating `AudioServer` bus.
+  - Mouse Sensitivity slider (0.001 to 0.010) tuning third-person player camera rotation.
+- **Milestone M5 Automated Test Suite (`tests/test_m5_ui_suite.gd`):**
+  - 75 unit assertions verifying all 4 UI scenes and controllers under Godot 4.7.2 headless execution.
+
+---
+
 ## [0.2.0] - 2026-10-19 — Project Pivot to Yangon Life
 
 ### BREAKING CHANGES

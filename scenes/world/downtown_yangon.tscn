@@ -1,4 +1,15 @@
-[gd_scene load_steps=37 format=3 uid="uid://c7downtownyangon01"]
+[gd_scene format=3 uid="uid://c7downtownyangon01"]
+
+[ext_resource type="PackedScene" path="res://scenes/vehicles/taxi_sedan.tscn" id="1_taxisedan"]
+[ext_resource type="PackedScene" path="res://scenes/vehicles/delivery_bicycle.tscn" id="2_bicycle"]
+[ext_resource type="Script" path="res://scripts/interaction/interactable_zone.gd" id="3_interactable"]
+[ext_resource type="Script" path="res://scripts/interaction/food_stall_handler.gd" id="4_foodstall"]
+[ext_resource type="Script" path="res://scripts/interaction/tea_shop_handler.gd" id="5_teashop"]
+[ext_resource type="Script" path="res://scripts/interaction/job_board_handler.gd" id="6_jobboard"]
+[ext_resource type="Script" path="res://scripts/interaction/park_bench_handler.gd" id="7_parkbench"]
+[ext_resource type="Script" path="res://scripts/interaction/gas_pump_handler.gd" id="8_gaspump"]
+[ext_resource type="PackedScene" path="res://scenes/npcs/npc_pedestrian.tscn" id="9_pedestrian"]
+[ext_resource type="PackedScene" path="res://scenes/vehicles/traffic_car.tscn" id="10_trafficcar"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_sky"]
 sky_top_color = Color(0.385, 0.455, 0.55, 1)
@@ -22,10 +33,10 @@ roughness = 0.9
 
 [sub_resource type="BoxMesh" id="BoxMesh_ground"]
 material = SubResource("Mat_Ground")
-size = Vector3(200, 1, 200)
+size = Vector3(240, 1, 240)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ground"]
-size = Vector3(200, 1, 200)
+size = Vector3(240, 1, 240)
 
 [sub_resource type="StandardMaterial3D" id="Mat_Road"]
 albedo_color = Color(0.2, 0.2, 0.2, 1)
@@ -33,11 +44,11 @@ roughness = 0.85
 
 [sub_resource type="BoxMesh" id="BoxMesh_road_ns"]
 material = SubResource("Mat_Road")
-size = Vector3(12, 0.05, 200)
+size = Vector3(14, 0.05, 240)
 
 [sub_resource type="BoxMesh" id="BoxMesh_road_ew"]
 material = SubResource("Mat_Road")
-size = Vector3(200, 0.05, 12)
+size = Vector3(240, 0.05, 14)
 
 [sub_resource type="BoxMesh" id="BoxMesh_side_1"]
 material = SubResource("Mat_Road")
@@ -46,6 +57,12 @@ size = Vector3(6, 0.05, 80)
 [sub_resource type="BoxMesh" id="BoxMesh_side_2"]
 material = SubResource("Mat_Road")
 size = Vector3(80, 0.05, 6)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_roundabout"]
+material = SubResource("Mat_Road")
+top_radius = 16.0
+bottom_radius = 16.0
+height = 0.06
 
 [sub_resource type="StandardMaterial3D" id="Mat_Colonial"]
 albedo_color = Color(0.835, 0.812, 0.745, 1)
@@ -121,6 +138,142 @@ size = Vector3(10, 18, 12)
 [sub_resource type="BoxShape3D" id="BoxShape3D_apartment"]
 size = Vector3(10, 18, 12)
 
+[sub_resource type="StandardMaterial3D" id="Mat_GoldBase"]
+albedo_color = Color(0.855, 0.647, 0.125, 1)
+metallic = 0.6
+roughness = 0.35
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_sule_base"]
+material = SubResource("Mat_GoldBase")
+top_radius = 8.0
+bottom_radius = 8.0
+height = 3.0
+radial_segments = 8
+
+[sub_resource type="StandardMaterial3D" id="Mat_GoldStupa"]
+albedo_color = Color(0.9, 0.722, 0.0, 1)
+metallic = 0.75
+roughness = 0.25
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_sule_stupa"]
+material = SubResource("Mat_GoldStupa")
+top_radius = 2.0
+bottom_radius = 5.0
+height = 5.0
+radial_segments = 16
+
+[sub_resource type="StandardMaterial3D" id="Mat_GoldSpire"]
+albedo_color = Color(1, 0.843, 0.0, 1)
+metallic = 0.9
+roughness = 0.15
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_sule_spire"]
+material = SubResource("Mat_GoldSpire")
+top_radius = 0.1
+bottom_radius = 0.4
+height = 6.0
+radial_segments = 12
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_sule"]
+height = 14.0
+radius = 8.0
+
+[sub_resource type="StandardMaterial3D" id="Mat_CityHall"]
+albedo_color = Color(0.91, 0.894, 0.851, 1)
+roughness = 0.75
+
+[sub_resource type="BoxMesh" id="BoxMesh_cityhall_main"]
+material = SubResource("Mat_CityHall")
+size = Vector3(40, 16, 20)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_cityhall"]
+size = Vector3(40, 20, 20)
+
+[sub_resource type="StandardMaterial3D" id="Mat_PeacockArch"]
+albedo_color = Color(0.769, 0.698, 0.51, 1)
+metallic = 0.3
+roughness = 0.6
+
+[sub_resource type="BoxMesh" id="BoxMesh_cityhall_tower"]
+material = SubResource("Mat_CityHall")
+size = Vector3(14, 8, 12)
+
+[sub_resource type="BoxMesh" id="BoxMesh_peacock_arch"]
+material = SubResource("Mat_PeacockArch")
+size = Vector3(16, 3, 2)
+
+[sub_resource type="StandardMaterial3D" id="Mat_ParkGround"]
+albedo_color = Color(0.23, 0.52, 0.22, 1)
+roughness = 0.9
+
+[sub_resource type="BoxMesh" id="BoxMesh_parkground"]
+material = SubResource("Mat_ParkGround")
+size = Vector3(50, 0.08, 40)
+
+[sub_resource type="StandardMaterial3D" id="Mat_Monument"]
+albedo_color = Color(0.94, 0.937, 0.922, 1)
+roughness = 0.4
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_monument"]
+material = SubResource("Mat_Monument")
+top_radius = 0.4
+bottom_radius = 1.8
+height = 25.0
+radial_segments = 6
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_monument_plinth"]
+material = SubResource("Mat_Monument")
+top_radius = 3.0
+bottom_radius = 3.8
+height = 2.0
+radial_segments = 6
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_monument"]
+height = 27.0
+radius = 3.8
+
+[sub_resource type="StandardMaterial3D" id="Mat_Gravel"]
+albedo_color = Color(0.78, 0.75, 0.68, 1)
+roughness = 0.95
+
+[sub_resource type="BoxMesh" id="BoxMesh_gravel_path"]
+material = SubResource("Mat_Gravel")
+size = Vector3(4, 0.1, 40)
+
+[sub_resource type="BoxMesh" id="BoxMesh_gravel_cross"]
+material = SubResource("Mat_Gravel")
+size = Vector3(50, 0.1, 4)
+
+[sub_resource type="StandardMaterial3D" id="Mat_ParkBench"]
+albedo_color = Color(0.545, 0.271, 0.075, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_parkbench"]
+material = SubResource("Mat_ParkBench")
+size = Vector3(2, 0.5, 0.8)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_parkbench"]
+size = Vector3(2, 0.5, 0.8)
+
+[sub_resource type="StandardMaterial3D" id="Mat_GasCanopy"]
+albedo_color = Color(0.165, 0.322, 0.745, 1)
+roughness = 0.5
+
+[sub_resource type="BoxMesh" id="BoxMesh_gas_canopy"]
+material = SubResource("Mat_GasCanopy")
+size = Vector3(12, 0.5, 10)
+
+[sub_resource type="StandardMaterial3D" id="Mat_GasPump"]
+albedo_color = Color(0.827, 0.184, 0.184, 1)
+roughness = 0.4
+
+[sub_resource type="BoxMesh" id="BoxMesh_gas_pump"]
+material = SubResource("Mat_GasPump")
+size = Vector3(0.8, 1.8, 0.8)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_gas_pump"]
+size = Vector3(2.5, 2.5, 2.5)
+
 [sub_resource type="StandardMaterial3D" id="Mat_FoodStall"]
 albedo_color = Color(0.357, 0.549, 0.243, 1)
 roughness = 0.7
@@ -154,24 +307,44 @@ size = Vector3(1.5, 2.5, 0.3)
 [sub_resource type="BoxShape3D" id="BoxShape3D_jobboard"]
 size = Vector3(1.5, 2.5, 0.3)
 
-[sub_resource type="StandardMaterial3D" id="Mat_ParkGround"]
-albedo_color = Color(0.294, 0.549, 0.243, 1)
+[sub_resource type="StandardMaterial3D" id="Mat_RedStool"]
+albedo_color = Color(0.85, 0.15, 0.15, 1)
+roughness = 0.6
+
+[sub_resource type="StandardMaterial3D" id="Mat_BlueStool"]
+albedo_color = Color(0.12, 0.45, 0.85, 1)
+roughness = 0.6
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_stool"]
+top_radius = 0.22
+bottom_radius = 0.25
+height = 0.42
+
+[sub_resource type="StandardMaterial3D" id="Mat_YBS_Shelter"]
+albedo_color = Color(0.18, 0.2, 0.22, 1)
+roughness = 0.7
+
+[sub_resource type="StandardMaterial3D" id="Mat_YBS_Sign"]
+albedo_color = Color(0.85, 0.1, 0.1, 1)
+roughness = 0.5
+
+[sub_resource type="BoxMesh" id="BoxMesh_bus_canopy"]
+material = SubResource("Mat_YBS_Shelter")
+size = Vector3(4.5, 0.2, 2.2)
+
+[sub_resource type="BoxMesh" id="BoxMesh_bus_bench"]
+material = SubResource("Mat_YBS_Sign")
+size = Vector3(3.2, 0.4, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="Mat_UtilityPole"]
+albedo_color = Color(0.35, 0.28, 0.2, 1)
 roughness = 0.9
 
-[sub_resource type="BoxMesh" id="BoxMesh_parkground"]
-material = SubResource("Mat_ParkGround")
-size = Vector3(20, 0.05, 20)
-
-[sub_resource type="StandardMaterial3D" id="Mat_ParkBench"]
-albedo_color = Color(0.545, 0.271, 0.075, 1)
-roughness = 0.8
-
-[sub_resource type="BoxMesh" id="BoxMesh_parkbench"]
-material = SubResource("Mat_ParkBench")
-size = Vector3(2, 0.5, 0.8)
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_parkbench"]
-size = Vector3(2, 0.5, 0.8)
+[sub_resource type="CylinderMesh" id="CylinderMesh_pole"]
+material = SubResource("Mat_UtilityPole")
+top_radius = 0.12
+bottom_radius = 0.16
+height = 7.5
 
 [node name="DowntownYangon" type="Node3D"]
 
@@ -213,10 +386,14 @@ mesh = SubResource("BoxMesh_side_1")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 0.01, 40)
 mesh = SubResource("BoxMesh_side_2")
 
+[node name="SuleRoundabout" type="MeshInstance3D" parent="Roads"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.015, 0)
+mesh = SubResource("CylinderMesh_roundabout")
+
 [node name="Buildings" type="Node3D" parent="."]
 
 [node name="ColonialBlock_A" type="StaticBody3D" parent="Buildings"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 6, -30)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25, 6, -30)
 collision_layer = 1
 collision_mask = 0
 
@@ -227,7 +404,7 @@ shape = SubResource("BoxShape3D_colonial_a")
 mesh = SubResource("BoxMesh_colonial_a")
 
 [node name="ColonialBlock_B" type="StaticBody3D" parent="Buildings"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25, 7.5, -20)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -28, 7.5, -20)
 collision_layer = 1
 collision_mask = 0
 
@@ -260,7 +437,7 @@ shape = SubResource("BoxShape3D_shophouse")
 mesh = SubResource("BoxMesh_shophouse")
 
 [node name="OfficeBuilding" type="StaticBody3D" parent="Buildings"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 12, -35)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -45, 12, -35)
 collision_layer = 1
 collision_mask = 0
 
@@ -271,7 +448,7 @@ shape = SubResource("BoxShape3D_office")
 mesh = SubResource("BoxMesh_office")
 
 [node name="Market_Hall" type="StaticBody3D" parent="Buildings"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 3, 50)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 3, 70)
 collision_layer = 1
 collision_mask = 0
 
@@ -282,7 +459,7 @@ shape = SubResource("BoxShape3D_market")
 mesh = SubResource("BoxMesh_market")
 
 [node name="Temple" type="StaticBody3D" parent="Buildings"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 4, 60)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -45, 4, 15)
 collision_layer = 1
 collision_mask = 0
 
@@ -293,7 +470,7 @@ shape = SubResource("BoxShape3D_temple")
 mesh = SubResource("BoxMesh_temple")
 
 [node name="Apartment_A" type="StaticBody3D" parent="Buildings"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 50, 9, -15)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 55, 9, -15)
 collision_layer = 1
 collision_mask = 0
 
@@ -303,70 +480,86 @@ shape = SubResource("BoxShape3D_apartment")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Buildings/Apartment_A"]
 mesh = SubResource("BoxMesh_apartment")
 
-[node name="Interactables" type="Node3D" parent="."]
+[node name="SulePagoda" type="StaticBody3D" parent="."]
+collision_layer = 1
+collision_mask = 0
 
-[node name="FoodStall" type="Area3D" parent="Interactables"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0.5, 15)
-collision_layer = 8
-collision_mask = 2
+[node name="Base" type="MeshInstance3D" parent="SulePagoda"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+mesh = SubResource("CylinderMesh_sule_base")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Interactables/FoodStall"]
-shape = SubResource("BoxShape3D_foodstall")
+[node name="StupaMiddle" type="MeshInstance3D" parent="SulePagoda"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.5, 0)
+mesh = SubResource("CylinderMesh_sule_stupa")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Interactables/FoodStall"]
-mesh = SubResource("BoxMesh_foodstall")
+[node name="Spire" type="MeshInstance3D" parent="SulePagoda"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 11, 0)
+mesh = SubResource("CylinderMesh_sule_spire")
 
-[node name="Label3D" type="Label3D" parent="Interactables/FoodStall"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3, 0)
-billboard = 1
-text = "Food Stall"
-font_size = 32
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SulePagoda"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 7, 0)
+shape = SubResource("CylinderShape3D_sule")
 
-[node name="TeaShop" type="Area3D" parent="Interactables"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0.5, 5)
-collision_layer = 8
-collision_mask = 2
+[node name="CityHall" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 0, -50)
+collision_layer = 1
+collision_mask = 0
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Interactables/TeaShop"]
-shape = SubResource("BoxShape3D_teashop")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="CityHall"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 0)
+shape = SubResource("BoxShape3D_cityhall")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Interactables/TeaShop"]
-mesh = SubResource("BoxMesh_teashop")
+[node name="MainBuilding" type="MeshInstance3D" parent="CityHall"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8, 0)
+mesh = SubResource("BoxMesh_cityhall_main")
 
-[node name="Label3D" type="Label3D" parent="Interactables/TeaShop"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
-billboard = 1
-text = "Tea Shop"
-font_size = 32
+[node name="CentralTower" type="MeshInstance3D" parent="CityHall"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 20, 0)
+mesh = SubResource("BoxMesh_cityhall_tower")
 
-[node name="JobBoard" type="Area3D" parent="Interactables"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 1, 0)
-collision_layer = 8
-collision_mask = 2
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Interactables/JobBoard"]
-shape = SubResource("BoxShape3D_jobboard")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Interactables/JobBoard"]
-mesh = SubResource("BoxMesh_jobboard")
-
-[node name="Label3D" type="Label3D" parent="Interactables/JobBoard"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
-billboard = 1
-text = "Job Board"
-font_size = 32
+[node name="PeacockArch" type="MeshInstance3D" parent="CityHall"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 12, 10.5)
+mesh = SubResource("BoxMesh_peacock_arch")
 
 [node name="Park" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, 0, 30)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 40)
 
 [node name="ParkGround" type="MeshInstance3D" parent="Park"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.04, 0)
 mesh = SubResource("BoxMesh_parkground")
 
+[node name="GravelPathNS" type="MeshInstance3D" parent="Park"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
+mesh = SubResource("BoxMesh_gravel_path")
+
+[node name="GravelPathEW" type="MeshInstance3D" parent="Park"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
+mesh = SubResource("BoxMesh_gravel_cross")
+
+[node name="IndependenceMonument" type="StaticBody3D" parent="Park"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
+collision_layer = 1
+collision_mask = 0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Park/IndependenceMonument"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13.5, 0)
+shape = SubResource("CylinderShape3D_monument")
+
+[node name="Plinth" type="MeshInstance3D" parent="Park/IndependenceMonument"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("CylinderMesh_monument_plinth")
+
+[node name="Obelisk" type="MeshInstance3D" parent="Park/IndependenceMonument"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 13.5, 0)
+mesh = SubResource("CylinderMesh_monument")
+
 [node name="ParkBench" type="Area3D" parent="Park"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0.4, 5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0.4, -6)
 collision_layer = 8
 collision_mask = 2
+script = ExtResource("3_interactable")
+prompt_text = "Relax on Park Bench"
+interaction_type = "park_bench"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Park/ParkBench"]
 shape = SubResource("BoxShape3D_parkbench")
@@ -380,5 +573,178 @@ billboard = 1
 text = "Park Bench - Relax"
 font_size = 32
 
+[node name="ParkBenchHandler" type="Node" parent="Park/ParkBench"]
+script = ExtResource("7_parkbench")
+
+[node name="MahaBandulaPark" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 40)
+
+[node name="Interactables" type="Node3D" parent="."]
+
+[node name="FoodStall" type="Area3D" parent="Interactables"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 0.5, 15)
+collision_layer = 8
+collision_mask = 2
+script = ExtResource("3_interactable")
+prompt_text = "Buy Mohinga (3,000 MMK)"
+interaction_type = "food_stall"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Interactables/FoodStall"]
+shape = SubResource("BoxShape3D_foodstall")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Interactables/FoodStall"]
+mesh = SubResource("BoxMesh_foodstall")
+
+[node name="Label3D" type="Label3D" parent="Interactables/FoodStall"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3, 0)
+billboard = 1
+text = "Food Stall"
+font_size = 32
+
+[node name="FoodStallHandler" type="Node" parent="Interactables/FoodStall"]
+script = ExtResource("4_foodstall")
+
+[node name="TeaShop" type="Area3D" parent="Interactables"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0.5, 5)
+collision_layer = 8
+collision_mask = 2
+script = ExtResource("3_interactable")
+prompt_text = "Drink Laphet Yay (1,500 MMK)"
+interaction_type = "tea_shop"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Interactables/TeaShop"]
+shape = SubResource("BoxShape3D_teashop")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Interactables/TeaShop"]
+mesh = SubResource("BoxMesh_teashop")
+
+[node name="Label3D" type="Label3D" parent="Interactables/TeaShop"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
+billboard = 1
+text = "Tea Shop"
+font_size = 32
+
+[node name="TeaShopHandler" type="Node" parent="Interactables/TeaShop"]
+script = ExtResource("5_teashop")
+
+[node name="JobBoard" type="Area3D" parent="Interactables"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18, 1, 8)
+collision_layer = 8
+collision_mask = 2
+script = ExtResource("3_interactable")
+prompt_text = "View Jobs"
+interaction_type = "job_board"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Interactables/JobBoard"]
+shape = SubResource("BoxShape3D_jobboard")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Interactables/JobBoard"]
+mesh = SubResource("BoxMesh_jobboard")
+
+[node name="Label3D" type="Label3D" parent="Interactables/JobBoard"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
+billboard = 1
+text = "Job Board"
+font_size = 32
+
+[node name="JobBoardHandler" type="Node" parent="Interactables/JobBoard"]
+script = ExtResource("6_jobboard")
+
+[node name="GasPump" type="Area3D" parent="Interactables"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 45, 0.5, 40)
+collision_layer = 8
+collision_mask = 2
+script = ExtResource("3_interactable")
+prompt_text = "Refuel Vehicle (1,200 MMK/L)"
+interaction_type = "gas_pump"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Interactables/GasPump"]
+shape = SubResource("BoxShape3D_gas_pump")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Interactables/GasPump"]
+mesh = SubResource("BoxMesh_gas_pump")
+
+[node name="Label3D" type="Label3D" parent="Interactables/GasPump"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+billboard = 1
+text = "Gas Pump (1,200 MMK/L)"
+font_size = 32
+
+[node name="GasPumpHandler" type="Node" parent="Interactables/GasPump"]
+script = ExtResource("8_gaspump")
+
+[node name="GasStationCanopy" type="MeshInstance3D" parent="Interactables"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 45, 4.5, 40)
+mesh = SubResource("BoxMesh_gas_canopy")
+
 [node name="SpawnPoint" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 14)
+
+[node name="TaxiSedan" parent="." instance=ExtResource("1_taxisedan")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0.2, -10)
+
+[node name="DeliveryBicycle" parent="." instance=ExtResource("2_bicycle")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18, 0.2, 8)
+
+[node name="StreetProps" type="Node3D" parent="."]
+
+[node name="TeaStool1" type="MeshInstance3D" parent="StreetProps"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.5, 0.21, 4.2)
+mesh = SubResource("CylinderMesh_stool")
+surface_material_override/0 = SubResource("Mat_RedStool")
+
+[node name="TeaStool2" type="MeshInstance3D" parent="StreetProps"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.5, 0.21, 5.8)
+mesh = SubResource("CylinderMesh_stool")
+surface_material_override/0 = SubResource("Mat_BlueStool")
+
+[node name="TeaStool3" type="MeshInstance3D" parent="StreetProps"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.5, 0.21, 4.2)
+mesh = SubResource("CylinderMesh_stool")
+surface_material_override/0 = SubResource("Mat_BlueStool")
+
+[node name="TeaStool4" type="MeshInstance3D" parent="StreetProps"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 21.5, 0.21, 5.8)
+mesh = SubResource("CylinderMesh_stool")
+surface_material_override/0 = SubResource("Mat_RedStool")
+
+[node name="BusShelter" type="Node3D" parent="StreetProps"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.5, 0, -25)
+
+[node name="Canopy" type="MeshInstance3D" parent="StreetProps/BusShelter"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, 0)
+mesh = SubResource("BoxMesh_bus_canopy")
+
+[node name="Bench" type="MeshInstance3D" parent="StreetProps/BusShelter"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, 0)
+mesh = SubResource("BoxMesh_bus_bench")
+
+[node name="BusSign" type="Label3D" parent="StreetProps/BusShelter"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.9, 0)
+billboard = 1
+text = "YBS Bus Stop • Sule Stand"
+font_size = 28
+
+[node name="UtilityPole1" type="MeshInstance3D" parent="StreetProps"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 3.75, -20)
+mesh = SubResource("CylinderMesh_pole")
+
+[node name="UtilityPole2" type="MeshInstance3D" parent="StreetProps"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 3.75, 20)
+mesh = SubResource("CylinderMesh_pole")
+
+[node name="PedestrianMonk" parent="." instance=ExtResource("9_pedestrian")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0.9, 6)
+npc_name = "Ashin Teza"
+archetype = "monk"
+
+[node name="PedestrianWorker" parent="." instance=ExtResource("9_pedestrian")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 0.9, -35)
+npc_name = "Ko Zaw"
+archetype = "office_worker"
+
+[node name="YBSCityBus" parent="." instance=ExtResource("10_trafficcar")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, -55)
+travel_speed = 7.0
+car_type = "ybs_bus"
+

@@ -18,6 +18,12 @@ TimeManager="*res://scripts/simulation/time_manager.gd"
 SaveManager="*res://scripts/save/save_manager.gd"
 CareerManager="*res://scripts/careers/career_manager.gd"
 InteractionManager="*res://scripts/interaction/interaction_manager.gd"
+NetworkManager="*res://scripts/networking/network_manager.gd"
+AudioManager="*res://scripts/systems/audio_manager.gd"
+SkillManager="*res://scripts/skills/skill_manager.gd"
+InventoryManager="*res://scripts/inventory/inventory_manager.gd"
+HousingManager="*res://scripts/housing/housing_manager.gd"
+
 
 [display]
 

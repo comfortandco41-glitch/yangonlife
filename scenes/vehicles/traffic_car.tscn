@@ -1,0 +1,44 @@
+[gd_scene load_steps=7 format=3 uid="uid://c1trafficcarybs01"]
+
+[ext_resource type="Script" path="res://scripts/vehicles/traffic_car.gd" id="1_traffic_car"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_car"]
+size = Vector3(2.2, 2.5, 7.0)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ybs_red"]
+albedo_color = Color(0.776471, 0.156863, 0.156863, 1)
+roughness = 0.5
+
+[sub_resource type="BoxMesh" id="BoxMesh_car"]
+material = SubResource("StandardMaterial3D_ybs_red")
+size = Vector3(2.2, 2.5, 7.0)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ybs_yellow"]
+albedo_color = Color(0.992157, 0.847059, 0.207843, 1)
+roughness = 0.5
+
+[sub_resource type="BoxMesh" id="BoxMesh_stripe"]
+material = SubResource("StandardMaterial3D_ybs_yellow")
+size = Vector3(2.22, 0.35, 7.02)
+
+[node name="TrafficCar" type="CharacterBody3D" groups=["traffic_cars"]]
+collision_layer = 4
+collision_mask = 7
+script = ExtResource("1_traffic_car")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0)
+shape = SubResource("BoxShape3D_car")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0)
+mesh = SubResource("BoxMesh_car")
+
+[node name="StripeYellow" type="MeshInstance3D" parent="MeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2, 0)
+mesh = SubResource("BoxMesh_stripe")
+
+[node name="ObstacleRay" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+target_position = Vector3(0, 0, -6)
+collision_mask = 7

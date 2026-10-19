@@ -139,7 +139,12 @@ func start_work() -> bool:
 func has_skill(skill_name: String) -> bool:
 	if skill_name == "":
 		return true
-	return skill_name in player_skills
+	if skill_name in player_skills:
+		return true
+	var sm := get_node_or_null("/root/SkillManager")
+	if sm and sm.has_method("has_skill_level"):
+		return sm.has_skill_level(skill_name, 1)
+	return false
 
 ## Grants a new skill to the player
 func add_skill(skill_name: String) -> void:

@@ -17,6 +17,17 @@ const FoodStallHandlerScript = preload("res://scripts/interaction/food_stall_han
 const TeaShopHandlerScript = preload("res://scripts/interaction/tea_shop_handler.gd")
 const JobBoardHandlerScript = preload("res://scripts/interaction/job_board_handler.gd")
 const ParkBenchHandlerScript = preload("res://scripts/interaction/park_bench_handler.gd")
+const SkillManagerScript = preload("res://scripts/skills/skill_manager.gd")
+const InventoryManagerScript = preload("res://scripts/inventory/inventory_manager.gd")
+const HousingManagerScript = preload("res://scripts/housing/housing_manager.gd")
+const DeliveryRunnerScript = preload("res://scripts/careers/delivery_runner.gd")
+const StreetVendorRunnerScript = preload("res://scripts/careers/street_vendor_runner.gd")
+const TaxiShiftRunnerScript = preload("res://scripts/careers/taxi_shift_runner.gd")
+const NPCPedestrianScript = preload("res://scripts/npcs/npc_pedestrian.gd")
+const TrafficCarScript = preload("res://scripts/vehicles/traffic_car.gd")
+const WeatherControllerScript = preload("res://scripts/simulation/weather_controller.gd")
+const TestM5UISuiteScript = preload("res://tests/test_m5_ui_suite.gd")
+const TestM7PolishSuiteScript = preload("res://tests/test_m7_polish_suite.gd")
 
 var _gm: Node
 var _em: Node
@@ -25,6 +36,9 @@ var _tm: Node
 var _sm: Node
 var _cm: Node
 var _im: Node
+var _skm: Node
+var _inm: Node
+var _hsm: Node
 
 func _init() -> void:
 	process_frame.connect(_run_all_tests, CONNECT_ONE_SHOT)
@@ -88,6 +102,27 @@ func _setup_autoloads() -> void:
 	else:
 		_sm = root.get_node("SaveManager")
 
+	if not root.has_node("SkillManager"):
+		_skm = SkillManagerScript.new()
+		_skm.name = "SkillManager"
+		root.add_child(_skm)
+	else:
+		_skm = root.get_node("SkillManager")
+
+	if not root.has_node("InventoryManager"):
+		_inm = InventoryManagerScript.new()
+		_inm.name = "InventoryManager"
+		root.add_child(_inm)
+	else:
+		_inm = root.get_node("InventoryManager")
+
+	if not root.has_node("HousingManager"):
+		_hsm = HousingManagerScript.new()
+		_hsm.name = "HousingManager"
+		root.add_child(_hsm)
+	else:
+		_hsm = root.get_node("HousingManager")
+
 func _run_all_tests() -> void:
 	print("==================================================")
 	print("  YANGON LIFE (ရန်ကုန် ဘဝ) — AUTOMATED HEADLESS TESTS")
@@ -106,6 +141,15 @@ func _run_all_tests() -> void:
 	_test_hud_ui()
 	_test_main_game_scene()
 	_test_save_load_system()
+	_test_skill_manager()
+	_test_inventory_manager()
+	_test_housing_manager()
+	_test_delivery_runner()
+	_test_street_vendor_runner()
+	_test_taxi_shift_runner()
+	_test_m4_living_city_systems()
+	_test_m5_ui_suite()
+	_test_m7_polish_suite()
 
 	print("\n--------------------------------------------------")
 	print("TEST RESULTS: %d PASSED, %d FAILED" % [tests_passed, tests_failed])
@@ -419,6 +463,10 @@ func _test_save_load_system() -> void:
 	_nm.hunger = 75.0
 	_nm.energy = 85.0
 	_tm.set_time(14, 30, 3)
+	_skm.add_xp("driving", 250.0)
+	_inm.clear_inventory()
+	_inm.add_item("mohinga", 4)
+	_hsm.current_housing_tier = "tier_2_shophouse"
 
 	var saved: bool = _sm.save_game()
 	_assert(saved == true, "save_game executed successfully")
@@ -428,6 +476,9 @@ func _test_save_load_system() -> void:
 	_em.set_balance(1000)
 	_nm.hunger = 20.0
 	_tm.set_time(6, 0, 1)
+	_skm.reset_skills()
+	_inm.clear_inventory()
+	_hsm.current_housing_tier = "tier_0_bench"
 
 	var loaded: bool = _sm.load_game()
 	_assert(loaded == true, "load_game executed successfully")
@@ -435,6 +486,465 @@ func _test_save_load_system() -> void:
 	_assert(is_equal_approx(_nm.hunger, 75.0), "Restored hunger level to 75.0")
 	_assert(_tm.game_hour == 14 and _tm.game_minute == 30, "Restored time to 14:30")
 	_assert(_tm.game_day == 3, "Restored day to 3")
+	_assert(_skm.get_level("driving") >= 2, "Restored driving skill level from save")
+	_assert(_inm.get_item_count("mohinga") == 4, "Restored inventory Mohinga count from save")
+	_assert(_hsm.current_housing_tier == "tier_2_shophouse", "Restored housing tier from save")
 
 	_sm.delete_save()
 	_assert(_sm.has_save() == false, "Save file cleaned up after test")
+
+func _test_skill_manager() -> void:
+	print("\n[Suite 12: SkillManager & Progression System]")
+	_skm.reset_skills()
+	_assert(_skm.get_level("driving") == 1, "Initial driving level is 1")
+	_assert(_skm.get_level("cooking") == 1, "Initial cooking level is 1")
+	_assert(_skm.get_level("customer_service") == 1, "Initial customer_service level is 1")
+	_assert(_skm.get_level("business") == 1, "Initial business level is 1")
+	_assert(_skm.get_level("mechanic") == 1, "Initial mechanic level is 1")
+	_assert(is_equal_approx(_skm.get_xp("driving"), 0.0), "Initial driving XP is 0.0")
+
+	# Test XP threshold: level 1 requires 100.0 * 1 = 100.0 XP
+	_assert(is_equal_approx(_skm.get_xp_for_next_level("driving"), 100.0), "XP needed for level 2 is 100.0")
+	var xp_signal_fired: Array[bool] = [false]
+	var level_signal_fired: Array[bool] = [false]
+	var gained_amount: Array[float] = [0.0]
+	var new_lvl_val: Array[int] = [0]
+
+	var xp_callable: Callable = func(s_name: String, amt: float, _cur_xp: float) -> void:
+		if s_name == "driving":
+			xp_signal_fired[0] = true
+			gained_amount[0] = amt
+	var lvl_callable: Callable = func(s_name: String, new_lvl: int) -> void:
+		if s_name == "driving":
+			level_signal_fired[0] = true
+			new_lvl_val[0] = new_lvl
+
+	_skm.skill_xp_gained.connect(xp_callable)
+	_skm.skill_leveled_up.connect(lvl_callable)
+
+	_skm.add_xp("driving", 60.0)
+	_assert(xp_signal_fired[0] == true and is_equal_approx(gained_amount[0], 60.0), "skill_xp_gained emitted with 60.0 XP")
+	_assert(is_equal_approx(_skm.get_xp("driving"), 60.0), "Current driving XP is 60.0")
+	_assert(_skm.get_level("driving") == 1, "Still at level 1 with 60 XP")
+	_assert(level_signal_fired[0] == false, "skill_leveled_up not emitted before threshold")
+
+	# Add 60 more XP -> total 120 XP -> crosses 100 threshold -> level 2, 20 XP remainder
+	_skm.add_xp("driving", 60.0)
+	_assert(_skm.get_level("driving") == 2, "Driving reached level 2")
+	_assert(is_equal_approx(_skm.get_xp("driving"), 20.0), "Driving XP remainder is 20.0")
+	_assert(level_signal_fired[0] == true and new_lvl_val[0] == 2, "skill_leveled_up emitted with level 2")
+
+	# Level 2 threshold is 100.0 * 2 = 200.0
+	_assert(is_equal_approx(_skm.get_xp_for_next_level("driving"), 200.0), "XP needed for level 3 is 200.0")
+
+	_skm.skill_xp_gained.disconnect(xp_callable)
+	_skm.skill_leveled_up.disconnect(lvl_callable)
+
+	# Multi-level leap to max level 5
+	_skm.add_xp("driving", 1000.0)
+	_assert(_skm.get_level("driving") == 5, "Driving maxed out at level 5")
+	_assert(_skm.has_skill_level("driving", 5) == true, "has_skill_level(driving, 5) returns true")
+	_assert(_skm.has_skill_level("driving", 6) == false, "has_skill_level(driving, 6) returns false")
+
+	# Test skill bonuses
+	_assert(_skm.get_driving_fuel_multiplier() < 1.0, "Driving level 5 reduces fuel multiplier")
+	_skm.add_xp("cooking", 150.0)
+	_assert(_skm.get_cooking_margin_bonus() > 0.0, "Cooking level 2 gives positive margin bonus")
+	_skm.add_xp("customer_service", 150.0)
+	_assert(_skm.get_customer_service_tip_bonus() > 0.0, "Customer service level 2 gives positive tip bonus")
+	_skm.add_xp("business", 150.0)
+	_assert(_skm.get_business_discount_multiplier() < 1.0, "Business level 2 reduces lease multiplier")
+	_skm.add_xp("mechanic", 150.0)
+	_assert(_skm.get_mechanic_discount_multiplier() < 1.0, "Mechanic level 2 reduces maintenance multiplier")
+
+	# Test save and load data
+	var skill_save: Dictionary = _skm.get_save_data()
+	_assert(skill_save.has("skills"), "SkillManager export contains 'skills' key")
+	_skm.reset_skills()
+	_assert(_skm.get_level("driving") == 1, "driving reset to 1")
+	_skm.load_save_data(skill_save)
+	_assert(_skm.get_level("driving") == 5, "driving restored to level 5 via load_save_data")
+
+func _test_inventory_manager() -> void:
+	print("\n[Suite 13: InventoryManager & Consumables System]")
+	_inm.clear_inventory()
+	_assert(_inm.slots.size() == 0, "Inventory initially empty")
+	_assert(_inm.is_full() == false, "Inventory is not full initially")
+
+	# Test item catalog definitions
+	var mohinga_def: Dictionary = _inm.get_item_definition("mohinga")
+	_assert(mohinga_def.get("name") == "Mohinga", "Mohinga definition found in catalog")
+	_assert(mohinga_def.get("category") == "food", "Mohinga category is food")
+	_assert(is_equal_approx(float(mohinga_def.get("hunger_restore")), 40.0), "Mohinga restores 40.0 hunger")
+	_assert(int(mohinga_def.get("value")) == 2500, "Mohinga value is 2,500 MMK")
+
+	var tea_def: Dictionary = _inm.get_item_definition("laphet_yay")
+	_assert(tea_def.get("name") == "Laphet Yay", "Laphet Yay definition found")
+	_assert(is_equal_approx(float(tea_def.get("stress_reduce")), 10.0), "Laphet Yay reduces 10.0 stress")
+
+	# Test add_item & stacking
+	var added1: bool = _inm.add_item("mohinga", 2)
+	_assert(added1 == true, "Added 2 Mohinga to inventory")
+	_assert(_inm.get_item_count("mohinga") == 2, "get_item_count('mohinga') returns 2")
+	_assert(_inm.slots.size() == 1, "1 slot occupied")
+
+	var added2: bool = _inm.add_item("mohinga", 3)
+	_assert(added2 == true, "Added 3 more Mohinga")
+	_assert(_inm.get_item_count("mohinga") == 5, "Total Mohinga stacked to 5 in single slot")
+	_assert(_inm.slots.size() == 1, "Still 1 slot occupied due to stacking")
+
+	_inm.add_item("laphet_yay", 1)
+	_inm.add_item("energy_drink", 1)
+	_assert(_inm.slots.size() == 3, "3 slots occupied with distinct items")
+
+	# Test remove_item
+	var removed_partial: bool = _inm.remove_item("mohinga", 2)
+	_assert(removed_partial == true, "Removed 2 Mohinga")
+	_assert(_inm.get_item_count("mohinga") == 3, "Remaining Mohinga is 3")
+
+	var removed_over: bool = _inm.remove_item("mohinga", 10)
+	_assert(removed_over == false, "Cannot remove 10 Mohinga when only 3 available")
+
+	# Test slot capacity cap (16 slots)
+	_inm.clear_inventory()
+	for i in range(16):
+		var dummy_id: String = "test_item_%d" % i
+		_inm.slots.append({"id": dummy_id, "quantity": 1})
+	_assert(_inm.is_full() == true, "Inventory recognizes full state at 16 slots")
+	var reject_add: bool = _inm.add_item("shan_noodles", 1)
+	_assert(reject_add == false, "add_item rejected when 16 slots are full")
+
+	# Test use_item with NeedsManager integration
+	_inm.clear_inventory()
+	_inm.add_item("mohinga", 2)
+	_nm.hunger = 40.0
+	var used_food: bool = _inm.use_item("mohinga")
+	_assert(used_food == true, "use_item('mohinga') succeeded")
+	_assert(is_equal_approx(_nm.hunger, 80.0), "NeedsManager hunger restored from 40 to 80")
+	_assert(_inm.get_item_count("mohinga") == 1, "Mohinga count reduced to 1 after consumption")
+
+	_inm.add_item("laphet_yay", 1)
+	_nm.stress = 50.0
+	_inm.use_item("laphet_yay")
+	_assert(is_equal_approx(_nm.stress, 40.0), "NeedsManager stress reduced by Laphet Yay (50 -> 40)")
+
+	_inm.add_item("energy_drink", 1)
+	_nm.energy = 50.0
+	_inm.use_item("energy_drink")
+	_assert(is_equal_approx(_nm.energy, 85.0), "NeedsManager energy restored by Sparks Energy Drink (50 -> 85)")
+
+	# Test save and load data
+	_inm.clear_inventory()
+	_inm.add_item("shan_noodles", 3)
+	_inm.add_item("transit_pass", 1)
+	var inv_save: Dictionary = _inm.get_save_data()
+	_inm.clear_inventory()
+	_assert(_inm.get_item_count("shan_noodles") == 0, "Inventory cleared")
+	_inm.load_save_data(inv_save)
+	_assert(_inm.get_item_count("shan_noodles") == 3, "Restored 3 Shan Noodles from save")
+	_assert(_inm.has_item("transit_pass", 1) == true, "Restored YBS transit pass from save")
+
+func _test_housing_manager() -> void:
+	print("\n[Suite 14: HousingManager & Rest Systems]")
+	_hsm.current_housing_tier = "tier_0_bench"
+	_assert(_hsm.current_housing_tier == "tier_0_bench", "Default housing tier is tier_0_bench")
+
+	var all_tiers: Dictionary = _hsm.get_all_tiers()
+	_assert(all_tiers.size() >= 5, "At least 5 housing tiers defined")
+	_assert(all_tiers.has("tier_0_bench"), "tier_0_bench defined")
+	_assert(all_tiers.has("tier_1_hostel"), "tier_1_hostel defined")
+	_assert(all_tiers.has("tier_2_shophouse"), "tier_2_shophouse defined")
+	_assert(all_tiers.has("tier_3_apartment"), "tier_3_apartment defined")
+	_assert(all_tiers.has("tier_4_heritage"), "tier_4_heritage defined")
+
+	# Test rent_property with EconomyManager
+	_em.set_balance(10000)
+	var rented_hostel: bool = _hsm.rent_property("tier_1_hostel")
+	_assert(rented_hostel == true, "Successfully rented Mahabandula Hostel Bunk for 5,000 MMK")
+	_assert(_em.get_balance() == 5000, "Economy balance deducted to 5,000 MMK")
+	_assert(_hsm.current_housing_tier == "tier_1_hostel", "Current housing tier updated to tier_1_hostel")
+
+	# Cannot afford expensive downtown shophouse (150,000 MMK)
+	var rented_shophouse: bool = _hsm.rent_property("tier_2_shophouse")
+	_assert(rented_shophouse == false, "Cannot rent tier_2_shophouse when balance is 5,000 MMK")
+	_assert(_hsm.current_housing_tier == "tier_1_hostel", "Housing tier unchanged after failed rent")
+
+	# Test pay_rent
+	_em.set_balance(6000)
+	var paid: bool = _hsm.pay_rent()
+	_assert(paid == true, "Successfully paid daily hostel rent (5,000 MMK)")
+	_assert(_em.get_balance() == 1000, "Balance deducted to 1,000 MMK")
+
+	# Test eviction safety net on rent default
+	_em.set_balance(500) # cannot pay 5000 rent
+	var evicted_res: bool = _hsm.pay_rent()
+	_assert(evicted_res == false, "pay_rent returned false on default")
+	_assert(_hsm.current_housing_tier == "tier_0_bench", "Eviction safety net placed player safely at tier_0_bench")
+
+	# Test sleep_at_home with tier_0_bench (low energy recovery, hygiene decay)
+	_tm.set_time(22, 0, 1)
+	_nm.energy = 20.0
+	_nm.hygiene = 70.0
+	_hsm.sleep_at_home(8)
+	_assert(_tm.game_hour == 6 and _tm.game_day == 2, "TimeManager advanced 8 hours (22:00 -> 06:00, day 2)")
+	_assert(is_equal_approx(_nm.energy, 60.0), "Bench sleep restored 40 energy (rate 0.5)")
+	_assert(_nm.hygiene < 70.0, "Bench sleep degraded hygiene due to street exposure")
+
+	# Test sleep_at_home with higher tier (e.g. tier_1_hostel has hygiene recovery = 30)
+	_em.set_balance(10000)
+	_hsm.rent_property("tier_1_hostel")
+	_nm.energy = 20.0
+	_nm.hygiene = 40.0
+	_hsm.sleep_at_home(8)
+	_assert(is_equal_approx(_nm.energy, 100.0), "Hostel sleep restored full 80 energy (rate 1.0)")
+	_assert(is_equal_approx(_nm.hygiene, 70.0), "Hostel sleep restored +30 hygiene from washroom (40 -> 70)")
+
+	# Test save and load data
+	var house_save: Dictionary = _hsm.get_save_data()
+	_hsm.current_housing_tier = "tier_0_bench"
+	_hsm.load_save_data(house_save)
+	_assert(_hsm.current_housing_tier == "tier_1_hostel", "Restored housing tier tier_1_hostel from save")
+
+func _test_delivery_runner() -> void:
+	print("\n[Suite 15: DeliveryRunner Career Loop]")
+	var runner := DeliveryRunnerScript.new()
+	root.add_child(runner)
+
+	var order: Dictionary = runner.create_order("Pansodan Depot", "Merchant St #12", 60.0, 8000)
+	_assert(order.get("base_pay") == 8000, "Delivery order created with 8,000 MMK base pay")
+	_assert(order.get("depot") == "Pansodan Depot", "Depot matches")
+
+	var accepted: bool = runner.accept_order(order)
+	_assert(accepted == true, "Delivery order accepted")
+	_assert(runner.current_state == DeliveryRunner.OrderState.ASSIGNED, "Current state is ASSIGNED")
+
+	var picked_up: bool = runner.pickup_package()
+	_assert(picked_up == true, "Package picked up from depot")
+	_assert(runner.current_state == DeliveryRunner.OrderState.PICKED_UP, "Current state is PICKED_UP")
+	_assert(_inm.has_item("delivery_parcel", 1) == true, "Parcel added to inventory during transit")
+
+	runner.advance_timer(10.0) # 50 minutes remaining
+	_assert(is_equal_approx(float(runner.active_order.get("time_remaining")), 50.0), "10 minutes deducted from delivery timer")
+
+	var initial_balance: int = _em.get_balance()
+	var prev_driving_xp: float = _skm.get_xp("driving")
+	var delivered: bool = runner.deliver_package()
+	_assert(delivered == true, "Package successfully delivered to destination")
+	_assert(_em.get_balance() >= initial_balance + 8000, "Economy credited 8,000 MMK base pay + tip")
+	_assert(_skm.get_xp("driving") > prev_driving_xp, "Driving XP awarded upon delivery")
+	_assert(_inm.has_item("delivery_parcel", 1) == false, "Parcel removed from inventory upon delivery")
+	_assert(runner.current_state == DeliveryRunner.OrderState.IDLE, "Runner state returned to IDLE")
+
+	runner.queue_free()
+
+func _test_street_vendor_runner() -> void:
+	print("\n[Suite 16: StreetVendorRunner Career Loop]")
+	var vendor := StreetVendorRunnerScript.new()
+	root.add_child(vendor)
+
+	var opened: bool = vendor.open_stall()
+	_assert(opened == true, "Street vendor stall opened")
+	_assert(vendor.is_stall_open == true, "is_stall_open is true")
+
+	var order: Dictionary = vendor.spawn_order("mohinga")
+	_assert(not order.is_empty(), "Spawned Mohinga customer order")
+	_assert(order.get("dish_id") == "mohinga", "Order dish_id is mohinga")
+	_assert(vendor.active_orders.size() == 1, "Active orders count is 1")
+
+	var prepped: bool = vendor.prepare_order(0)
+	_assert(prepped == true, "Prepared Mohinga order")
+	_assert(vendor.active_orders[0].get("is_prepared") == true, "Order marked as prepared")
+
+	var prev_balance: int = _em.get_balance()
+	var prev_cooking_xp: float = _skm.get_xp("cooking")
+	var earned: int = vendor.serve_order(0)
+	_assert(earned >= 5000 and earned <= 12000, "Earned within 5,000 - 12,000 MMK range (Earned: %d MMK)" % earned)
+	_assert(_em.get_balance() == prev_balance + earned, "Economy credited food stall earnings")
+	_assert(_skm.get_xp("cooking") > prev_cooking_xp, "Cooking XP awarded for serving dish")
+	_assert(vendor.active_orders.size() == 0, "Served order removed from active list")
+
+	vendor.close_stall()
+	_assert(vendor.is_stall_open == false, "Stall successfully closed")
+
+	vendor.queue_free()
+
+func _test_taxi_shift_runner() -> void:
+	print("\n[Suite 17: TaxiShiftRunner Career Loop]")
+	var taxi := TaxiShiftRunnerScript.new()
+	root.add_child(taxi)
+
+	var started: bool = taxi.start_shift()
+	_assert(started == true, "Taxi shift started")
+	_assert(taxi.current_state == TaxiShiftRunner.TaxiState.CRUISING, "Current state is CRUISING")
+
+	var hail: Dictionary = taxi.generate_hail("Daw San", "Sule Pagoda", "Junction City", 4.0)
+	_assert(hail.get("passenger_name") == "Daw San", "Hail generated for Daw San")
+	_assert(is_equal_approx(float(hail.get("distance_km")), 4.0), "Distance is 4.0 km")
+
+	var accepted: bool = taxi.accept_hail(hail)
+	_assert(accepted == true, "Passenger hail accepted")
+
+	var boarded: bool = taxi.board_passenger()
+	_assert(boarded == true, "Passenger boarded vehicle")
+	_assert(taxi.current_state == TaxiShiftRunner.TaxiState.PASSENGER_ONBOARD, "State is PASSENGER_ONBOARD")
+
+	var prev_balance: int = _em.get_balance()
+	var prev_driving_xp: float = _skm.get_xp("driving")
+	var net_earned: int = taxi.complete_trip(1.0)
+	_assert(net_earned > 0, "Net taxi earnings positive (Earned: %d MMK)" % net_earned)
+	_assert(_em.get_balance() == prev_balance + net_earned, "Net fare credited to EconomyManager")
+	_assert(_skm.get_xp("driving") > prev_driving_xp, "Driving XP awarded for taxi trip")
+	_assert(taxi.trips_completed == 1, "Trips completed count incremented to 1")
+
+	taxi.end_shift()
+	_assert(taxi.current_state == TaxiShiftRunner.TaxiState.OFF_DUTY, "Shift ended, state is OFF_DUTY")
+
+	taxi.queue_free()
+
+func _test_m4_living_city_systems() -> void:
+	print("\n[Suite 18: Milestone M4 — Living City NPCs, Traffic & Weather]")
+	# 1. NPC Pedestrian Script
+	var npc := NPCPedestrianScript.new()
+	root.add_child(npc)
+	_assert(npc.npc_name == "U Kyaw", "Pedestrian default name is U Kyaw")
+	_assert(npc.archetype == "office_worker", "Pedestrian default archetype is office_worker")
+	_assert(is_equal_approx(npc.walk_speed, 2.0), "Pedestrian default walk_speed is 2.0 m/s")
+
+	# Contextual greetings
+	npc.archetype = "monk"
+	var monk_talk: String = npc.talk_to_player()
+	_assert(monk_talk.contains("Mingalarba"), "Monk greeting contains Burmese greeting Mingalarba")
+
+	npc.archetype = "street_vendor"
+	var vendor_talk: String = npc.talk_to_player()
+	_assert(vendor_talk.contains("Mohinga"), "Vendor greeting offers authentic Mohinga")
+
+	# Distance LOD transitions
+	npc.global_position = Vector3.ZERO
+	npc.update_lod(Vector3(10, 0, 0)) # < 25m
+	_assert(npc.current_lod == NPCPedestrianScript.LOD_FULL and npc.visible == true, "LOD < 25m is LOD_FULL and visible")
+	_assert(npc.collision_layer == 2, "LOD_FULL collision_layer = 2 (Characters)")
+
+	npc.update_lod(Vector3(40, 0, 0)) # 25m - 60m
+	_assert(npc.current_lod == NPCPedestrianScript.LOD_SIMPLIFIED and npc.visible == true, "LOD 25-60m is LOD_SIMPLIFIED and visible")
+	_assert(npc.collision_layer == 0, "LOD_SIMPLIFIED has collision disabled")
+
+	npc.update_lod(Vector3(100, 0, 0)) # > 60m
+	_assert(npc.current_lod == NPCPedestrianScript.LOD_OFFSCREEN and npc.visible == false, "LOD > 60m is LOD_OFFSCREEN and hidden")
+
+	# Schedule Evaluation
+	npc.schedule_stops = [Vector3(0, 0, 0), Vector3(10, 0, 0)]
+	npc.evaluate_schedule(14)
+	_assert(npc.current_stop_index == 1, "Schedule evaluation maps game hour 14 to stop 1")
+	npc.queue_free()
+
+	# 2. NPC Pedestrian Scene
+	var npc_scene: PackedScene = load("res://scenes/npcs/npc_pedestrian.tscn")
+	_assert(npc_scene != null, "scenes/npcs/npc_pedestrian.tscn loaded successfully")
+	var npc_inst: CharacterBody3D = npc_scene.instantiate() as CharacterBody3D
+	root.add_child(npc_inst)
+	_assert(npc_inst.collision_layer == 2, "Pedestrian scene collision_layer is 2 (Characters)")
+	_assert(npc_inst.has_node("CollisionShape3D"), "Pedestrian scene has CollisionShape3D")
+	_assert(npc_inst.has_node("MeshInstance3D"), "Pedestrian scene has MeshInstance3D")
+	_assert(npc_inst.has_node("TalkArea/InteractableZone"), "Pedestrian scene has TalkArea with child InteractableZone")
+	npc_inst.queue_free()
+
+	# 3. TrafficCar Script
+	var car := TrafficCarScript.new()
+	root.add_child(car)
+	_assert(is_equal_approx(car.travel_speed, 8.0), "Traffic car travel_speed is 8.0 m/s")
+	_assert(car.car_type == "ybs_bus", "Traffic car default type is 'ybs_bus'")
+	_assert(car.collision_layer == 4, "Traffic car collision_layer is 4 (Layer 3 Vehicles)")
+	_assert(car.collision_mask == 7, "Traffic car collision_mask is 7 (World|Characters|Vehicles)")
+
+	car.set_waypoints([Vector3(0, 0, 0), Vector3(0, 0, 20)])
+	_assert(car.waypoints.size() == 2, "set_waypoints populated 2 road waypoints")
+	car.set_tire_traction(0.8)
+	_assert(is_equal_approx(car.tire_traction, 0.8), "set_tire_traction updated tire traction to 0.8")
+	car.advance_traffic(0.1)
+	_assert(car.current_speed > 0.0, "Car advanced forward when road is clear")
+	car.queue_free()
+
+	# 4. TrafficCar Scene
+	var car_scene: PackedScene = load("res://scenes/vehicles/traffic_car.tscn")
+	_assert(car_scene != null, "scenes/vehicles/traffic_car.tscn loaded successfully")
+	var car_inst: CharacterBody3D = car_scene.instantiate() as CharacterBody3D
+	root.add_child(car_inst)
+	_assert(car_inst.collision_layer == 4, "TrafficCar scene collision_layer is 4 (Vehicles)")
+	_assert(car_inst.has_node("CollisionShape3D"), "TrafficCar scene has CollisionShape3D")
+	_assert(car_inst.has_node("MeshInstance3D"), "TrafficCar scene has MeshInstance3D")
+	_assert(car_inst.has_node("ObstacleRay"), "TrafficCar scene has ObstacleRay")
+	var obs_ray: RayCast3D = car_inst.get_node("ObstacleRay") as RayCast3D
+	_assert(is_equal_approx(obs_ray.target_position.z, -6.0), "ObstacleRay points 6.0m forward (z = -6.0)")
+	car_inst.queue_free()
+
+	# 5. WeatherController Script
+	var wc := WeatherControllerScript.new()
+	root.add_child(wc)
+	wc.update_sun(6, 0)
+	_assert(is_equal_approx(wc.get_sun_angle(), 0.0), "06:00 sunrise sun angle is 0.0°")
+	_assert(is_equal_approx(wc.get_sun_energy(), 0.4), "06:00 dawn sun energy is 0.4")
+
+	wc.update_sun(12, 0)
+	_assert(is_equal_approx(wc.get_sun_angle(), 90.0), "12:00 noon sun angle is 90.0°")
+	_assert(is_equal_approx(wc.get_sun_energy(), 1.2), "12:00 noon sun energy is 1.2")
+
+	wc.update_sun(18, 0)
+	_assert(is_equal_approx(wc.get_sun_angle(), 180.0), "18:00 sunset sun angle is 180.0°")
+
+	wc.set_weather(WeatherControllerScript.CLEAR)
+	_assert(wc.get_weather() == WeatherControllerScript.CLEAR, "WeatherController sets CLEAR weather")
+	_assert(is_equal_approx(wc.get_vehicle_traction(), 1.0), "CLEAR weather traction is 1.0")
+
+	wc.set_weather(WeatherControllerScript.RAIN)
+	_assert(wc.get_weather() == WeatherControllerScript.RAIN, "WeatherController sets RAIN weather")
+	_assert(wc.get_vehicle_traction() < 1.0, "RAIN weather reduces vehicle traction (< 1.0)")
+	_assert(_nm.stress_growth > 1.5, "RAIN weather elevates player stress growth")
+
+	wc.set_weather(WeatherControllerScript.MONSOON)
+	_assert(wc.get_weather() == WeatherControllerScript.MONSOON, "WeatherController sets MONSOON weather")
+	_assert(wc.get_vehicle_traction() <= 0.55, "MONSOON weather reduces vehicle traction to <= 0.55")
+
+	wc.set_weather(WeatherControllerScript.CLEAR)
+	wc.queue_free()
+
+	# 6. WeatherEnvironment Scene
+	var env_scene: PackedScene = load("res://scenes/world/weather_environment.tscn")
+	_assert(env_scene != null, "scenes/world/weather_environment.tscn loaded successfully")
+	var env_inst: Node3D = env_scene.instantiate() as Node3D
+	root.add_child(env_inst)
+	_assert(env_inst.has_node("SunLight"), "WeatherEnvironment has SunLight")
+	_assert(env_inst.has_node("RainParticles"), "WeatherEnvironment has RainParticles")
+	var sun_light: DirectionalLight3D = env_inst.get_node("SunLight") as DirectionalLight3D
+	_assert(sun_light.shadow_enabled == true, "SunLight has shadows enabled")
+	var rain_part: CPUParticles3D = env_inst.get_node("RainParticles") as CPUParticles3D
+	_assert(rain_part.amount >= 300, "RainParticles amount >= 300")
+	_assert(rain_part.emission_shape == CPUParticles3D.EMISSION_SHAPE_BOX, "RainParticles emission_shape is Box")
+
+	var env_wc := env_inst as WeatherController
+	_assert(env_wc != null, "WeatherEnvironment root script is WeatherController")
+	env_wc.set_weather(WeatherControllerScript.RAIN)
+	_assert(rain_part.emitting == true, "RainParticles emit in RAIN weather")
+	env_wc.set_weather(WeatherControllerScript.CLEAR)
+	_assert(rain_part.emitting == false, "RainParticles stop emitting in CLEAR weather")
+	env_inst.queue_free()
+
+func _test_m5_ui_suite() -> void:
+	var m5_suite := TestM5UISuiteScript.new()
+	root.add_child(m5_suite)
+	m5_suite.run_all()
+	tests_passed += m5_suite.tests_passed
+	tests_failed += m5_suite.tests_failed
+	m5_suite.queue_free()
+
+func _test_m7_polish_suite() -> void:
+	var m7_suite := TestM7PolishSuiteScript.new()
+	root.add_child(m7_suite)
+	m7_suite.run_all()
+	tests_passed += m7_suite.tests_passed
+	tests_failed += m7_suite.tests_failed
+	m7_suite.queue_free()
+
+
+
+

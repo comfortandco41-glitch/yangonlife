@@ -10,8 +10,8 @@ signal interacted
 var _last_interaction_frame: int = -1
 
 func _ready() -> void:
-	# Layer 4 = Interactables, Layer 2 = Characters
-	collision_layer = 4
+	# Layer 4 = Interactables (bitmask 8), Layer 2 = Characters (bitmask 2)
+	collision_layer = 8
 	collision_mask = 2
 	monitoring = true
 

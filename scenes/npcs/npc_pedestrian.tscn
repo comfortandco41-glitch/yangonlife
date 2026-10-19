@@ -1,0 +1,59 @@
+[gd_scene load_steps=8 format=3 uid="uid://c1npclivingpedestrian"]
+
+[ext_resource type="Script" path="res://scripts/npcs/npc_pedestrian.gd" id="1_npc"]
+[ext_resource type="Script" path="res://scripts/interaction/interactable_zone.gd" id="2_interactable"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_npc"]
+radius = 0.35
+height = 1.8
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_longyi"]
+albedo_color = Color(0.180392, 0.490196, 0.196078, 1)
+roughness = 0.8
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_npc"]
+material = SubResource("StandardMaterial3D_longyi")
+radius = 0.35
+height = 1.8
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_shirt"]
+albedo_color = Color(0.960784, 0.960784, 0.960784, 1)
+roughness = 0.7
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_talk"]
+radius = 2.0
+
+[node name="NPCPedestrian" type="CharacterBody3D" groups=["npcs", "pedestrians"]]
+collision_layer = 2
+collision_mask = 5
+script = ExtResource("1_npc")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("CapsuleShape3D_npc")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+mesh = SubResource("CapsuleMesh_npc")
+
+[node name="Shirt" type="MeshInstance3D" parent="MeshInstance3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35, 0)
+material_override = SubResource("StandardMaterial3D_shirt")
+
+[node name="TalkArea" type="Area3D" parent="."]
+collision_layer = 8
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TalkArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("SphereShape3D_talk")
+
+[node name="InteractableZone" type="Area3D" parent="TalkArea"]
+collision_layer = 8
+collision_mask = 2
+script = ExtResource("2_interactable")
+prompt_text = "Talk to Pedestrian"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TalkArea/InteractableZone"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("SphereShape3D_talk")

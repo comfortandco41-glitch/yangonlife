@@ -1,0 +1,146 @@
+[gd_scene format=3 uid="uid://c8taxisedan001"]
+
+[ext_resource type="Script" path="res://scripts/vehicles/vehicle_controller.gd" id="1_vehicle"]
+[ext_resource type="Script" path="res://scripts/interaction/interactable_zone.gd" id="2_interactable"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_taxi_col"]
+size = Vector3(1.8, 1.4, 4.2)
+
+[sub_resource type="StandardMaterial3D" id="Mat_CarBody"]
+albedo_color = Color(0.902, 0.722, 0.0, 1)
+metallic = 0.3
+roughness = 0.4
+
+[sub_resource type="BoxMesh" id="BoxMesh_carbody"]
+material = SubResource("Mat_CarBody")
+size = Vector3(1.7, 0.9, 4)
+
+[sub_resource type="StandardMaterial3D" id="Mat_CabinGlass"]
+albedo_color = Color(0.18, 0.22, 0.26, 0.9)
+metallic = 0.5
+roughness = 0.2
+
+[sub_resource type="BoxMesh" id="BoxMesh_cabin"]
+material = SubResource("Mat_CabinGlass")
+size = Vector3(1.5, 0.6, 2)
+
+[sub_resource type="StandardMaterial3D" id="Mat_TaxiSign"]
+albedo_color = Color(1, 0.84, 0, 1)
+emission_enabled = true
+emission = Color(1, 0.8, 0, 1)
+emission_energy_multiplier = 0.5
+
+[sub_resource type="BoxMesh" id="BoxMesh_taxisign"]
+material = SubResource("Mat_TaxiSign")
+size = Vector3(0.6, 0.15, 0.2)
+
+[sub_resource type="StandardMaterial3D" id="Mat_WheelTire"]
+albedo_color = Color(0.12, 0.12, 0.12, 1)
+roughness = 0.8
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_wheel"]
+material = SubResource("Mat_WheelTire")
+top_radius = 0.35
+bottom_radius = 0.35
+height = 0.25
+
+[sub_resource type="StandardMaterial3D" id="Mat_Headlight"]
+albedo_color = Color(1, 1, 0.9, 1)
+emission_enabled = true
+emission = Color(1, 1, 0.85, 1)
+emission_energy_multiplier = 1.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_headlight"]
+material = SubResource("Mat_Headlight")
+size = Vector3(0.3, 0.18, 0.1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_door"]
+size = Vector3(1.2, 1.5, 1.5)
+
+[node name="TaxiSedan" type="CharacterBody3D"]
+collision_layer = 4
+collision_mask = 5
+script = ExtResource("1_vehicle")
+vehicle_name = "Yellow-Top Taxi"
+max_speed = 16.0
+acceleration = 8.0
+braking = 14.0
+reverse_speed = 6.0
+steering_speed = 2.2
+max_steering_angle = 0.55
+fuel_capacity = 50.0
+fuel_consumption_rate = 0.05
+is_motorized = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+shape = SubResource("BoxShape3D_taxi_col")
+
+[node name="CarBody" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 0)
+mesh = SubResource("BoxMesh_carbody")
+
+[node name="Cabin" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, -0.2)
+mesh = SubResource("BoxMesh_cabin")
+
+[node name="TaxiSign" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.55, -0.2)
+mesh = SubResource("BoxMesh_taxisign")
+
+[node name="Label3D" type="Label3D" parent="TaxiSign"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, 0.11)
+pixel_size = 0.003
+text = "TAXI"
+font_size = 32
+outline_size = 6
+
+[node name="Wheel_FL" type="MeshInstance3D" parent="."]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, -0.9, 0.35, -1.2)
+mesh = SubResource("CylinderMesh_wheel")
+
+[node name="Wheel_FR" type="MeshInstance3D" parent="."]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0.9, 0.35, -1.2)
+mesh = SubResource("CylinderMesh_wheel")
+
+[node name="Wheel_RL" type="MeshInstance3D" parent="."]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, -0.9, 0.35, 1.2)
+mesh = SubResource("CylinderMesh_wheel")
+
+[node name="Wheel_RR" type="MeshInstance3D" parent="."]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0.9, 0.35, 1.2)
+mesh = SubResource("CylinderMesh_wheel")
+
+[node name="Light_L" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, 0.65, -2)
+mesh = SubResource("BoxMesh_headlight")
+
+[node name="Light_R" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.6, 0.65, -2)
+mesh = SubResource("BoxMesh_headlight")
+
+[node name="DoorArea" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2, 0.8, 0)
+collision_layer = 8
+collision_mask = 2
+script = ExtResource("2_interactable")
+prompt_text = "Drive Yellow-Top Taxi"
+interaction_type = "vehicle"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DoorArea"]
+shape = SubResource("BoxShape3D_door")
+
+[node name="ExitPoint" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0, 0)
+
+[node name="CameraMount" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
+
+[node name="SpringArm3D" type="SpringArm3D" parent="CameraMount"]
+transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 0, 0)
+collision_mask = 1
+spring_length = 6.0
+
+[node name="Camera3D" type="Camera3D" parent="CameraMount/SpringArm3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 6)
+fov = 75.0

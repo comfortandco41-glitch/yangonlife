@@ -1,0 +1,160 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/inventory_menu_controller.gd" id="1_inv"]
+
+[node name="InventoryMenu" type="Control"]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_inv")
+
+[node name="DimBackdrop" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.04, 0.06, 0.09, 0.75)
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MainPanel" type="PanelContainer" parent="CenterContainer"]
+custom_minimum_size = Vector2(820, 520)
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="CenterContainer/MainPanel"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="TopHeader" type="HBoxContainer" parent="CenterContainer/MainPanel/VBox"]
+layout_mode = 2
+
+[node name="TitleBox" type="VBoxContainer" parent="CenterContainer/MainPanel/VBox/TopHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TitleLabel" type="Label" parent="CenterContainer/MainPanel/VBox/TopHeader/TitleBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.3, 1)
+theme_override_font_sizes/font_size = 20
+text = "🎒 BACKPACK INVENTORY (ကျောပိုးအိတ်)"
+
+[node name="CapacityLabel" type="Label" parent="CenterContainer/MainPanel/VBox/TopHeader/TitleBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.75, 0.75, 0.75, 1)
+theme_override_font_sizes/font_size = 13
+text = "Backpack Slots: 0 / 16"
+
+[node name="CloseButton" type="Button" parent="CenterContainer/MainPanel/VBox/TopHeader"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 32)
+layout_mode = 2
+size_flags_vertical = 0
+text = "✕ Close [I]"
+
+[node name="HSeparator" type="HSeparator" parent="CenterContainer/MainPanel/VBox"]
+layout_mode = 2
+
+[node name="BodyHBox" type="HBoxContainer" parent="CenterContainer/MainPanel/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 20
+
+[node name="GridPanel" type="PanelContainer" parent="CenterContainer/MainPanel/VBox/BodyHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SlotsGrid" type="GridContainer" parent="CenterContainer/MainPanel/VBox/BodyHBox/GridPanel"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 8
+columns = 4
+
+[node name="InfoCardPanel" type="PanelContainer" parent="CenterContainer/MainPanel/VBox/BodyHBox"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+
+[node name="InfoBox" type="VBoxContainer" parent="CenterContainer/MainPanel/VBox/BodyHBox/InfoCardPanel"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="ItemCategoryBadge" type="Label" parent="CenterContainer/MainPanel/VBox/BodyHBox/InfoCardPanel/InfoBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.4, 0.8, 1, 1)
+theme_override_font_sizes/font_size = 12
+text = "[ FOOD ]"
+
+[node name="ItemTitleLabel" type="Label" parent="CenterContainer/MainPanel/VBox/BodyHBox/InfoCardPanel/InfoBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 18
+text = "Mohinga (မုန့်ဟင်းခါး)"
+
+[node name="ItemQtyLabel" type="Label" parent="CenterContainer/MainPanel/VBox/BodyHBox/InfoCardPanel/InfoBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.85, 0.85, 1)
+theme_override_font_sizes/font_size = 13
+text = "Quantity: 2"
+
+[node name="HSeparator" type="HSeparator" parent="CenterContainer/MainPanel/VBox/BodyHBox/InfoCardPanel/InfoBox"]
+layout_mode = 2
+
+[node name="ItemDescLabel" type="Label" parent="CenterContainer/MainPanel/VBox/BodyHBox/InfoCardPanel/InfoBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.75, 0.75, 0.75, 1)
+theme_override_font_sizes/font_size = 12
+text = "Savory catfish noodle soup with lemongrass and crispy split peas."
+autowrap_mode = 2
+
+[node name="ItemEffectsLabel" type="Label" parent="CenterContainer/MainPanel/VBox/BodyHBox/InfoCardPanel/InfoBox"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.3, 0.9, 0.4, 1)
+theme_override_font_sizes/font_size = 13
+text = "Effects: +40 Hunger, -5 Stress"
+
+[node name="UseFeedbackToast" type="Label" parent="CenterContainer/MainPanel/VBox/BodyHBox/InfoCardPanel/InfoBox"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.2, 0.9, 0.3, 1)
+theme_override_font_sizes/font_size = 12
+text = "Consumed item!"
+horizontal_alignment = 1
+
+[node name="Spacer" type="Control" parent="CenterContainer/MainPanel/VBox/BodyHBox/InfoCardPanel/InfoBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="UseItemButton" type="Button" parent="CenterContainer/MainPanel/VBox/BodyHBox/InfoCardPanel/InfoBox"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+text = "Eat Food (စားမည်)"
+
+[node name="HintLabel" type="Label" parent="CenterContainer/MainPanel/VBox/BodyHBox/InfoCardPanel/InfoBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.5, 0.5, 0.5, 1)
+theme_override_font_sizes/font_size = 11
+text = "Hotkeys: [I] Inventory | [Esc] Close"
+horizontal_alignment = 1

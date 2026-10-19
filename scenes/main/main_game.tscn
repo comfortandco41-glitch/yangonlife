@@ -3,6 +3,10 @@
 [ext_resource type="PackedScene" path="res://scenes/world/downtown_yangon.tscn" id="1_world"]
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2_player"]
 [ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="3_hud"]
+[ext_resource type="PackedScene" path="res://scenes/ui/phone_menu.tscn" id="4_phone"]
+[ext_resource type="PackedScene" path="res://scenes/ui/inventory_menu.tscn" id="5_inv"]
+[ext_resource type="PackedScene" path="res://scenes/ui/pause_menu.tscn" id="6_pause"]
+[ext_resource type="PackedScene" path="res://scenes/ui/start_screen.tscn" id="7_start"]
 
 [node name="MainGame" type="Node3D"]
 
@@ -12,3 +16,14 @@
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 
 [node name="HUD" parent="." instance=ExtResource("3_hud")]
+
+[node name="UI" type="CanvasLayer" parent="."]
+layer = 10
+
+[node name="PhoneMenu" parent="UI" instance=ExtResource("4_phone")]
+
+[node name="InventoryMenu" parent="UI" instance=ExtResource("5_inv")]
+
+[node name="PauseMenu" parent="UI" instance=ExtResource("6_pause")]
+
+[node name="StartScreen" parent="." instance=ExtResource("7_start")]

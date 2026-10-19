@@ -1,0 +1,111 @@
+[gd_scene format=3 uid="uid://c8bicycle0001"]
+
+[ext_resource type="Script" path="res://scripts/vehicles/vehicle_controller.gd" id="1_vehicle"]
+[ext_resource type="Script" path="res://scripts/interaction/interactable_zone.gd" id="2_interactable"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_bike_col"]
+size = Vector3(0.6, 1.2, 1.8)
+
+[sub_resource type="StandardMaterial3D" id="Mat_FrameGreen"]
+albedo_color = Color(0.18, 0.49, 0.2, 1)
+metallic = 0.4
+roughness = 0.5
+
+[sub_resource type="BoxMesh" id="BoxMesh_frame"]
+material = SubResource("Mat_FrameGreen")
+size = Vector3(0.08, 0.7, 1.1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_BikeTire"]
+albedo_color = Color(0.12, 0.12, 0.12, 1)
+roughness = 0.85
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_bikewheel"]
+material = SubResource("Mat_BikeTire")
+top_radius = 0.35
+bottom_radius = 0.35
+height = 0.1
+
+[sub_resource type="StandardMaterial3D" id="Mat_Handlebars"]
+albedo_color = Color(0.3, 0.3, 0.3, 1)
+metallic = 0.8
+roughness = 0.3
+
+[sub_resource type="BoxMesh" id="BoxMesh_handlebars"]
+material = SubResource("Mat_Handlebars")
+size = Vector3(0.6, 0.05, 0.05)
+
+[sub_resource type="StandardMaterial3D" id="Mat_BasketBrown"]
+albedo_color = Color(0.545, 0.353, 0.169, 1)
+roughness = 0.8
+
+[sub_resource type="BoxMesh" id="BoxMesh_basket"]
+material = SubResource("Mat_BasketBrown")
+size = Vector3(0.5, 0.3, 0.4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_door"]
+size = Vector3(1, 1.2, 1.5)
+
+[node name="DeliveryBicycle" type="CharacterBody3D"]
+collision_layer = 4
+collision_mask = 5
+script = ExtResource("1_vehicle")
+vehicle_name = "Delivery Bicycle"
+max_speed = 7.0
+acceleration = 4.0
+braking = 12.0
+reverse_speed = 3.0
+steering_speed = 2.8
+max_steering_angle = 0.65
+fuel_capacity = 0.0
+fuel_consumption_rate = 0.0
+is_motorized = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
+shape = SubResource("BoxShape3D_bike_col")
+
+[node name="Frame" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
+mesh = SubResource("BoxMesh_frame")
+
+[node name="Wheel_F" type="MeshInstance3D" parent="."]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0.35, -0.65)
+mesh = SubResource("CylinderMesh_bikewheel")
+
+[node name="Wheel_R" type="MeshInstance3D" parent="."]
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0.35, 0.65)
+mesh = SubResource("CylinderMesh_bikewheel")
+
+[node name="Handlebars" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, -0.45)
+mesh = SubResource("BoxMesh_handlebars")
+
+[node name="CargoBasket" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0.45)
+mesh = SubResource("BoxMesh_basket")
+
+[node name="DoorArea" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.6, 0.6, 0)
+collision_layer = 8
+collision_mask = 2
+script = ExtResource("2_interactable")
+prompt_text = "Ride Delivery Bicycle"
+interaction_type = "vehicle"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DoorArea"]
+shape = SubResource("BoxShape3D_door")
+
+[node name="ExitPoint" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, 0, 0)
+
+[node name="CameraMount" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
+
+[node name="SpringArm3D" type="SpringArm3D" parent="CameraMount"]
+transform = Transform3D(1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 0, 0)
+collision_mask = 1
+spring_length = 4.0
+
+[node name="Camera3D" type="Camera3D" parent="CameraMount/SpringArm3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4)
+fov = 75.0

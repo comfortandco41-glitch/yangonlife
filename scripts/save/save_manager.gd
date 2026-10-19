@@ -30,6 +30,9 @@ func save_game() -> bool:
 	var needs_node := get_node_or_null("/root/NeedsManager")
 	var time_node := get_node_or_null("/root/TimeManager")
 	var career_node := get_node_or_null("/root/CareerManager")
+	var skill_node := get_node_or_null("/root/SkillManager")
+	var inventory_node := get_node_or_null("/root/InventoryManager")
+	var housing_node := get_node_or_null("/root/HousingManager")
 
 	var save_data: Dictionary = {
 		"version": SAVE_VERSION,
@@ -38,6 +41,9 @@ func save_game() -> bool:
 		"needs": needs_node.get_save_data() if needs_node and needs_node.has_method("get_save_data") else {},
 		"time": time_node.get_save_data() if time_node and time_node.has_method("get_save_data") else {},
 		"career": career_node.get_save_data() if career_node and career_node.has_method("get_save_data") else {},
+		"skills": skill_node.get_save_data() if skill_node and skill_node.has_method("get_save_data") else {},
+		"inventory": inventory_node.get_save_data() if inventory_node and inventory_node.has_method("get_save_data") else {},
+		"housing": housing_node.get_save_data() if housing_node and housing_node.has_method("get_save_data") else {},
 		"player": _collect_player_data()
 	}
 
@@ -101,6 +107,18 @@ func load_game() -> bool:
 	var career_node := get_node_or_null("/root/CareerManager")
 	if career_node and career_node.has_method("load_save_data") and data.has("career") and data["career"] is Dictionary:
 		career_node.load_save_data(data["career"])
+
+	var skill_node := get_node_or_null("/root/SkillManager")
+	if skill_node and skill_node.has_method("load_save_data") and data.has("skills") and data["skills"] is Dictionary:
+		skill_node.load_save_data(data["skills"])
+
+	var inventory_node := get_node_or_null("/root/InventoryManager")
+	if inventory_node and inventory_node.has_method("load_save_data") and data.has("inventory") and data["inventory"] is Dictionary:
+		inventory_node.load_save_data(data["inventory"])
+
+	var housing_node := get_node_or_null("/root/HousingManager")
+	if housing_node and housing_node.has_method("load_save_data") and data.has("housing") and data["housing"] is Dictionary:
+		housing_node.load_save_data(data["housing"])
 
 	if data.has("player") and data["player"] is Dictionary:
 		_distribute_player_data(data["player"])

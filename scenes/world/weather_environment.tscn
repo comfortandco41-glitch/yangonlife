@@ -1,0 +1,37 @@
+[gd_scene load_steps=5 format=3 uid="uid://c1weatherenv01"]
+
+[ext_resource type="Script" path="res://scripts/simulation/weather_controller.gd" id="1_weather"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rain"]
+transparency = 1
+albedo_color = Color(0.7, 0.9, 1, 0.7)
+roughness = 0.2
+
+[sub_resource type="BoxMesh" id="BoxMesh_rain"]
+material = SubResource("StandardMaterial3D_rain")
+size = Vector3(0.04, 0.35, 0.04)
+
+[node name="WeatherEnvironment" type="Node3D"]
+script = ExtResource("1_weather")
+sun_light_path = NodePath("SunLight")
+rain_particles_path = NodePath("RainParticles")
+
+[node name="SunLight" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.866025, 0.353553, -0.353553, 0, 0.707107, 0.707107, 0.5, -0.612372, 0.612372, 0, 20, 0)
+light_color = Color(1, 0.95, 0.88, 1)
+light_energy = 1.2
+shadow_enabled = true
+
+[node name="RainParticles" type="CPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 15, 0)
+emitting = false
+amount = 300
+lifetime = 1.2
+emission_shape = 3
+emission_box_extents = Vector3(15, 5, 15)
+direction = Vector3(0, -1, 0)
+spread = 5.0
+initial_velocity_min = 15.0
+initial_velocity_max = 20.0
+mesh = SubResource("BoxMesh_rain")
+color = Color(0.7, 0.9, 1, 0.7)

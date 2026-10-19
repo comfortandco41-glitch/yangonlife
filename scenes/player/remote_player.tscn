@@ -1,0 +1,53 @@
+[gd_scene load_steps=7 format=3 uid="uid://remoteplayerpuppet01"]
+
+[ext_resource type="Script" path="res://scripts/networking/remote_player.gd" id="1_remote_player"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_player"]
+radius = 0.35
+height = 1.8
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_shirt"]
+albedo_color = Color(0.92, 0.9, 0.84, 1)
+roughness = 0.6
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_body"]
+material = SubResource("StandardMaterial3D_shirt")
+radius = 0.35
+height = 1.8
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_longyi"]
+albedo_color = Color(0.12, 0.38, 0.22, 1)
+roughness = 0.7
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_longyi"]
+material = SubResource("StandardMaterial3D_longyi")
+top_radius = 0.36
+bottom_radius = 0.37
+height = 0.9
+
+[node name="RemotePlayer" type="CharacterBody3D" groups=["remote_player"]]
+collision_layer = 2
+collision_mask = 1
+script = ExtResource("1_remote_player")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+shape = SubResource("CapsuleShape3D_player")
+
+[node name="BodyMesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
+mesh = SubResource("CapsuleMesh_body")
+
+[node name="LongyiMesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+mesh = SubResource("CylinderMesh_longyi")
+
+[node name="OverheadLabel" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.1, 0)
+billboard = 1
+no_depth_test = true
+font_size = 28
+outline_size = 4
+outline_color = Color(0, 0, 0, 1)
+text = "Player
+K 50,000 • Downtown"
